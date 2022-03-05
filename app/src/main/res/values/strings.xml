@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">mobileCodeReview</string>
     <string name="home_pull_request">Pull Requests</string>
-    <string name="home_repository">Repository</string>
+    <string name="home_repository">Repositories</string>
     <string name="home_home">Home</string>
+    <string name="home_add_repository_FAB">Add new Repository</string>
 </resources>
