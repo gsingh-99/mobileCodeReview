@@ -8,8 +8,11 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import at.technikum_wien.singh.mobilecodereview.ui.theme.MobileCodeReviewTheme
 import at.technikum_wien.singh.mobilecodereview.view.Navigation
+import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
+import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModelFactory
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,7 +21,9 @@ class MainActivity : ComponentActivity() {
             MobileCodeReviewTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
-                    Navigation()
+                    var viewModel: CodeReviewViewModel = viewModel(
+                        factory = CodeReviewViewModelFactory())
+                    Navigation(viewModel = viewModel)
                 }
             }
         }

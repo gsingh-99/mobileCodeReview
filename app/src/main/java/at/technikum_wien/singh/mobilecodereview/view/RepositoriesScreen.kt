@@ -12,8 +12,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.technikum_wien.singh.mobilecodereview.R
+import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
-fun RepositoriesScreen(navController: NavController?) {
-
+fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
+    viewModel.title.value = stringResource(R.string.home_repository)
 }
