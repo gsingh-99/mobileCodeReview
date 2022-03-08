@@ -49,13 +49,11 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 } else {
                     Spacer(modifier = Modifier.width(48.dp))
                 }
-                viewModel.title.value?.let {
                     Text(
-                        text = it,
+                        text = viewModel.title.value,
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1
                     )
-                }
             }
         }
     ) {
