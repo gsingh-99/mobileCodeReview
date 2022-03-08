@@ -70,14 +70,3 @@ fun Navigation(viewModel: CodeReviewViewModel) {
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    MobileCodeReviewTheme {
-        var viewModel: CodeReviewViewModel = viewModel(
-            factory = CodeReviewViewModelFactory()
-        )
-        Navigation(viewModel = viewModel)
-    }
-}

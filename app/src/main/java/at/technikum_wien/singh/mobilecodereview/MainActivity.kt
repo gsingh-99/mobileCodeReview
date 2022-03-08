@@ -9,6 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import at.technikum_wien.singh.mobilecodereview.data.RepositoryItemRepository
 import at.technikum_wien.singh.mobilecodereview.ui.theme.MobileCodeReviewTheme
 import at.technikum_wien.singh.mobilecodereview.view.Navigation
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
@@ -22,7 +23,8 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(color = MaterialTheme.colors.background) {
                     var viewModel: CodeReviewViewModel = viewModel(
-                        factory = CodeReviewViewModelFactory())
+                        factory = CodeReviewViewModelFactory(application,
+                            RepositoryItemRepository(applicationContext)))
                     Navigation(viewModel = viewModel)
                 }
             }
