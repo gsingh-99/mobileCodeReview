@@ -1,14 +1,9 @@
 package at.technikum_wien.singh.mobilecodereview.view
 
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
@@ -16,31 +11,53 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.technikum_wien.singh.mobilecodereview.R
-import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
+import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
 fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
+    LaunchedEffect(Unit, block = {
+        viewModel.getGithubList()
+    })
     viewModel.title.value = stringResource(R.string.home_repository)
-    val repositoryItems by viewModel.repositoryItems.observeAsState()
-    LazyColumn(Modifier.fillMaxWidth()) {
-        itemsIndexed(repositoryItems ?: listOf()) { index, repositoryItem ->
-            RepositoryItemRow(
-                navController = navController,
-                index = index,
-                repositoryItem = repositoryItem,
-                viewModel = viewModel
-            )
+    Column() {
+       // Text(text = viewModel.errorMessage)
+        Spacer(modifier = Modifier.width(24.dp))
+        LazyColumn(Modifier.fillMaxWidth()) {
+
+            items(viewModel.VSCRepositoryItemList) { repositoryItem ->
+                RepositoryItemRow(
+                    repositoryItemItem = repositoryItem,
+                )
+                Spacer(modifier = Modifier.width(16.dp))
+            }
         }
     }
 }
 
 @Composable
 fun RepositoryItemRow(
-    navController: NavController?,
-    index: Int,
-    repositoryItem: RepositoryItem,
-    viewModel: CodeReviewViewModel
+    repositoryItemItem: VSCRepositoryItem,
 ) {
-    Text(text = repositoryItem.url)
+    Row(Modifier.fillMaxSize()) {
+        Spacer(modifier = Modifier.width(16.dp))
+        Box(Modifier.fillMaxSize()) {
+
+            Column(Modifier.fillMaxSize()) {
+                Text(
+                    text = "" + repositoryItemItem.owner.login,
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.subtitle1
+                )
+                Text(
+                    text = repositoryItemItem.name ?: "",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.button
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+    }
+
 }
+

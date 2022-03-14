@@ -60,7 +60,7 @@ fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
         Spacer(modifier = Modifier.weight(1f))
         Row {
             Spacer(modifier = Modifier.weight(1f))
-            FloatingActionButton(onClick = { /* ... */ }) {
+            FloatingActionButton(onClick = { viewModel.addRepository() }) {
                 Icon(
                     Icons.Filled.Add,
                     contentDescription = stringResource(R.string.home_add_repository_FAB),

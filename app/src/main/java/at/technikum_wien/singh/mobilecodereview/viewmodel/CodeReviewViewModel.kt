@@ -1,27 +1,99 @@
 package at.technikum_wien.singh.mobilecodereview.viewmodel
 
 import android.app.Application
+import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItemRepository
+import at.technikum_wien.singh.mobilecodereview.data.vscModules.APIService
+import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
+import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class CodeReviewViewModel(
     private val application: Application,
     private val repository: RepositoryItemRepository
 ) :
     ViewModel() {
+    val title = mutableStateOf("")
     val repositoryItems by lazy { repository.repositoryItems }
-    val title = mutableStateOf<String>("")
+    private val _githubRepositoryList = mutableStateListOf<VSCRepositoryItem>()
+    val VSCRepositoryItemList: List<VSCRepositoryItem>
+        get() = _githubRepositoryList
+    private val _pullRequestList = mutableStateListOf<VSCPullrequest>()
+    val VSCPullRequestList: List<VSCPullrequest>
+        get() = _pullRequestList
+    var errorMessage: String by mutableStateOf("")
+    private val TAG = "ViewModel"
 
-    init {
-       /* var repositoryItem = RepositoryItem("test", "test")
+    fun addRepository() {
+        application.onTerminate()
+        val repositoryItem = RepositoryItem(
+            "https://api.github.com/repos/gsingh-99/XSS-injection",
+            "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"
+        )
         viewModelScope.launch {
             repository.insert(repositoryItem)
-        }*/
+        }
+    }
+
+    init {
+        viewModelScope.launch {
+            repositoryItems.value
+        }
+    }
+
+    fun getGithubList() {
+        viewModelScope.launch {
+            val repo = repository.repositoryItemDao.findById(9).observeForever {
+                val apiService = APIService.getInstance()
+                runBlocking {
+                    try {
+                        _githubRepositoryList.clear()
+                        _githubRepositoryList.add(
+                            apiService.getRepository(
+                                it.url,
+                                it.token
+                            )
+                        )
+
+                    } catch (e: Exception) {
+                        errorMessage = e.message.toString()
+                    }
+                }
+            }
+        }
+
+    }
+
+    fun getPullRequestList() {
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
+            try {
+                _pullRequestList.clear()
+                _pullRequestList.addAll(
+                    apiService.getPullRequests(
+                        "https://api.github.com/repos/gsingh-99/XSS-injection/pulls",
+                        "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"
+                    )
+                )
+
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+
+        }
+
     }
 }
 

@@ -1,9 +1,18 @@
 package at.technikum_wien.singh.mobilecodereview.data
+
 import android.content.Context
+import androidx.lifecycle.LiveData
+
 class RepositoryItemRepository(context: Context) {
-    private val repositoryItemDao by lazy { ApplicationDatabase.getDatabase(context).repositoryItemDao() }
+    val repositoryItemDao by lazy {
+        ApplicationDatabase.getDatabase(context).repositoryItemDao()
+    }
     val repositoryItems by lazy { repositoryItemDao.repositoryItems }
     suspend fun insert(repositoryItem: RepositoryItem) {
         repositoryItemDao.insert(repositoryItem = repositoryItem)
+    }
+
+    fun findById(id: Long): LiveData<RepositoryItem> {
+        return repositoryItemDao.findById(id)
     }
 }
