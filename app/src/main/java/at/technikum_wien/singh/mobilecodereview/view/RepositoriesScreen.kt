@@ -7,6 +7,7 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -21,7 +22,7 @@ fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewM
     })
     viewModel.title.value = stringResource(R.string.home_repository)
     Column() {
-       // Text(text = viewModel.errorMessage)
+        // Text(text = viewModel.errorMessage)
         Spacer(modifier = Modifier.width(24.dp))
         LazyColumn(Modifier.fillMaxWidth()) {
 
@@ -39,25 +40,29 @@ fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewM
 fun RepositoryItemRow(
     repositoryItemItem: VSCRepositoryItem,
 ) {
-    Row(Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.width(16.dp))
-        Box(Modifier.fillMaxSize()) {
+    Button(
+        onClick = { /*TODO*/ },
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+    ) {
+        Row(Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.width(16.dp))
+            Box(Modifier.fillMaxSize()) {
 
-            Column(Modifier.fillMaxSize()) {
-                Text(
-                    text = "" + repositoryItemItem.owner.login,
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.subtitle1
-                )
-                Text(
-                    text = repositoryItemItem.name ?: "",
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.button
-                )
+                Column(Modifier.fillMaxSize()) {
+                    Text(
+                        text = "" + repositoryItemItem.owner.login,
+                        color = MaterialTheme.colors.primaryVariant,
+                        style = MaterialTheme.typography.subtitle1
+                    )
+                    Text(
+                        text = repositoryItemItem.name ?: "",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h1
+                    )
+                }
             }
+            Spacer(modifier = Modifier.width(16.dp))
         }
-        Spacer(modifier = Modifier.width(16.dp))
     }
-
 }
 
