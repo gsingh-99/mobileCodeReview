@@ -70,7 +70,7 @@ fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
             }
             Spacer(modifier = Modifier.weight(0.045f))
         }
-        Spacer(modifier = Modifier.weight(0.045f))
+        Spacer(modifier = Modifier.weight(0.08f))
     }
 
 }
