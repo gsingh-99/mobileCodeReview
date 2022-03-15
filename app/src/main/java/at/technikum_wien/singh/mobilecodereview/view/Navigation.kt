@@ -49,11 +49,11 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 } else {
                     Spacer(modifier = Modifier.width(48.dp))
                 }
-                    Text(
-                        text = viewModel.title.value,
-                        color = MaterialTheme.colors.secondary,
-                        style = MaterialTheme.typography.body1
-                    )
+                Text(
+                    text = viewModel.title.value,
+                    color = MaterialTheme.colors.secondary,
+                    style = MaterialTheme.typography.body1
+                )
             }
         }
     ) {
@@ -68,5 +68,6 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 PullRequestScreen(navController = navController, viewModel = viewModel)
             }
         }
+        GenericAlertDialog(viewModel = viewModel)
     }
 }

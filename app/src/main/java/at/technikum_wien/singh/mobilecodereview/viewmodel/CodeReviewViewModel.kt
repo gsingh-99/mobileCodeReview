@@ -2,11 +2,8 @@ package at.technikum_wien.singh.mobilecodereview.viewmodel
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -26,6 +23,8 @@ class CodeReviewViewModel(
 ) :
     ViewModel() {
     val title = mutableStateOf("")
+    val openGenericDialog = mutableStateOf(false)
+    val openGenericDialogMessage = mutableStateOf("")
     val repositoryItems by lazy { repository.repositoryItems }
     private val _githubRepositoryList = mutableStateListOf<VSCRepositoryItem>()
     val VSCRepositoryItemList: List<VSCRepositoryItem>
@@ -34,6 +33,7 @@ class CodeReviewViewModel(
     val VSCPullRequestList: List<VSCPullrequest>
         get() = _pullRequestList
     var errorMessage: String by mutableStateOf("")
+
     private val TAG = "ViewModel"
 
     fun addRepository() {

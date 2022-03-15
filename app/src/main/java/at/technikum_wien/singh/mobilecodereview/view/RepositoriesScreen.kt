@@ -29,6 +29,7 @@ fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewM
             items(viewModel.VSCRepositoryItemList) { repositoryItem ->
                 RepositoryItemRow(
                     repositoryItemItem = repositoryItem,
+                    viewModel = viewModel
                 )
                 Spacer(modifier = Modifier.width(16.dp))
             }
@@ -39,9 +40,14 @@ fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewM
 @Composable
 fun RepositoryItemRow(
     repositoryItemItem: VSCRepositoryItem,
+    viewModel: CodeReviewViewModel
 ) {
     Button(
-        onClick = { /*TODO*/ },
+        onClick = {
+            viewModel.openGenericDialog.value = true
+            viewModel.openGenericDialogMessage.value =
+                "This is a prototype for code reviewing. Therefore, browsing the repository is not in the development scope. Please use another front-end to check your repository."
+        },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
     ) {
         Row(Modifier.fillMaxSize()) {
