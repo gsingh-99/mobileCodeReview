@@ -13,6 +13,8 @@ abstract class RepositoryItemDAO {
     abstract fun loadAllRepositoryItems(): List<RepositoryItem>
     @Query("SELECT * FROM repository_item WHERE _id LIKE :id")
     abstract fun findById(id: Long): LiveData<RepositoryItem>
-    @Insert(onConflict = OnConflictStrategy.ABORT)
+    @Query("SELECT * FROM repository_item WHERE url LIKE :url")
+    abstract fun findByUrl(url: String): LiveData<RepositoryItem>
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract suspend fun insert(repositoryItem: RepositoryItem): Long
 }

@@ -41,7 +41,7 @@ class CodeReviewViewModel(
     fun addRepository() {
         application.onTerminate()
         val repositoryItem = RepositoryItem(
-            "https://api.github.com/repos/gsingh-99/XSS-injection",
+            "https://api.github.com/repos/gsingh-99/ProductCatalog",
             "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"
         )
         viewModelScope.launch {
@@ -57,23 +57,27 @@ class CodeReviewViewModel(
 
     fun getGithubList() {
         viewModelScope.launch {
-            val repo = repository.repositoryItemDao.findById(9).observeForever {
-                val apiService = APIService.getInstance()
-                runBlocking {
-                    try {
-                        _githubRepositoryList.clear()
-                        _githubRepositoryList.add(
-                            apiService.getRepository(
-                                it.url,
-                                it.token
-                            )
-                        )
+            val apiService = APIService.getInstance()
 
-                    } catch (e: Exception) {
-                        errorMessage = e.message.toString()
+            _githubRepositoryList.clear()
+            repositoryItems.observeForever {
+                it.forEach {
+                    runBlocking {
+                        try {
+                            _githubRepositoryList.add(
+                                apiService.getRepository(
+                                    it.url,
+                                    it.token
+                                )
+                            )
+                        } catch (e: Exception) {
+                            errorMessage = e.message.toString()
+                        }
+
                     }
                 }
             }
+
         }
 
     }
@@ -81,21 +85,46 @@ class CodeReviewViewModel(
     fun getPullRequestList() {
         viewModelScope.launch {
             val apiService = APIService.getInstance()
+
+            _pullRequestList.clear()
+            repositoryItems.observeForever {
+                it.forEach {
+                    runBlocking {
+                        try {
+                            _pullRequestList.addAll(
+                                apiService.getPullRequests(
+                                    it.url + "/pulls",
+                                    it.token
+                                )
+                            )
+                        } catch (e: Exception) {
+                            errorMessage = e.message.toString()
+                        }
+
+                    }
+                }
+            }
+
+        }
+    }
+
+    fun getPullRequest(): VSCPullrequest? {
+        var pr: VSCPullrequest? = null
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
             try {
-                _pullRequestList.clear()
-                _pullRequestList.addAll(
-                    apiService.getPullRequests(
+                pr =
+                    apiService.getPullRequest(
                         "https://api.github.com/repos/gsingh-99/XSS-injection/pulls",
                         "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"
+
                     )
-                )
 
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }
-
         }
-
+        return pr
     }
 
     fun calcUpdateDuration(date: Date): String {

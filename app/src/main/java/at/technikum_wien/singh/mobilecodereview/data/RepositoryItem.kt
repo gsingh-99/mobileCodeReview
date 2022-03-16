@@ -6,7 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @kotlinx.serialization.Serializable
-@Entity(tableName = "repository_item", indices = [Index(value = ["_id"], unique = true)])
+@Entity(tableName = "repository_item", indices = [Index(value = ["url"], unique = true)])
 class RepositoryItem(
     @ColumnInfo(name = "_id")
     @PrimaryKey(autoGenerate = true)

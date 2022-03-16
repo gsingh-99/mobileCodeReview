@@ -25,6 +25,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModelFactory
 
@@ -65,6 +67,17 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 }
                 composable(route = Screen.PullRequestScreen.route) {
                     PullRequestScreen(navController = navController, viewModel = viewModel)
+                }
+                composable(route = Screen.PullRequestDetailScreen.route + "/{repositoryIndex}",
+                    arguments = listOf(
+                        navArgument(name = "repositoryIndex") {
+                            type = NavType.IntType
+                        }
+                    )){
+                    var item : VSCPullrequest? = null
+                    val index = it.arguments?.getInt("repositoryIndex")
+
+                    PullRequestDetailScreen(navController = navController, viewModel = viewModel, pullRequestItem = null )
                 }
             }
             GenericAlertDialog(viewModel = viewModel)

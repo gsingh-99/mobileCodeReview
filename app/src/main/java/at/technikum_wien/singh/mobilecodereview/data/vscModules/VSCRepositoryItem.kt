@@ -1,5 +1,6 @@
 package at.technikum_wien.singh.mobilecodereview.data.vscModules
 
+import android.util.Log
 import at.technikum_wien.singh.mobilecodereview.data.enum.VSCType
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -43,13 +44,14 @@ interface APIService {
     suspend fun getRepository(@Url url: String, @Header("Authorization") authorization: String): VSCRepositoryItem
     @GET
     suspend fun getPullRequests(@Url url: String, @Header("Authorization") authorization: String): List<VSCPullrequest>
-
+    @GET
+    suspend fun getPullRequest(@Url url: String, @Header("Authorization") authorization: String): VSCPullrequest
     companion object {
         var apiService: APIService? = null
         fun getInstance(): APIService {
             if (apiService == null) {
                 apiService = Retrofit.Builder()
-                    .baseUrl("https://example.com")
+                    .baseUrl("https://api.github.com")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build().create(APIService::class.java)
             }

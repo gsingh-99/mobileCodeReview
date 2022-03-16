@@ -21,7 +21,7 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 import java.util.*
 
 @Composable
-fun PullRequestScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
+fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewModel) {
     LaunchedEffect(Unit, block = {
         viewModel.getPullRequestList()
     })
@@ -31,7 +31,8 @@ fun PullRequestScreen(navController: NavController?, viewModel: CodeReviewViewMo
         items(viewModel.VSCPullRequestList) { pullRequestItem ->
             PullRequestItemRow(
                 pullRequestItem = pullRequestItem,
-                viewModel = viewModel
+                viewModel = viewModel,
+                navController = navController
             )
         }
     }
@@ -40,10 +41,11 @@ fun PullRequestScreen(navController: NavController?, viewModel: CodeReviewViewMo
 @Composable
 fun PullRequestItemRow(
     pullRequestItem: VSCPullrequest,
-    viewModel: CodeReviewViewModel
+    viewModel: CodeReviewViewModel,
+    navController: NavController
 ) {
     Button(
-        onClick = {},
+        onClick = { navController.navigate(Screen.PullRequestDetailScreen.route) },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
     ) {
         Row(Modifier.fillMaxSize()) {
