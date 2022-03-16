@@ -13,6 +13,7 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 fun GenericAlertDialog(viewModel: CodeReviewViewModel) {
     if (viewModel.openGenericDialog.value) {
         AlertDialog(
+            backgroundColor = MaterialTheme.colors.secondary,
             onDismissRequest = { viewModel.openGenericDialog.value = false },
             title = { Text(text = "Info") },
             text = { Text(text = viewModel.openGenericDialogMessage.value) },

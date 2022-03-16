@@ -1,18 +1,24 @@
 package at.technikum_wien.singh.mobilecodereview.view
 
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.technikum_wien.singh.mobilecodereview.R
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
+import java.util.*
 
 @Composable
 fun PullRequestScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
@@ -25,6 +31,7 @@ fun PullRequestScreen(navController: NavController?, viewModel: CodeReviewViewMo
         items(viewModel.VSCPullRequestList) { pullRequestItem ->
             PullRequestItemRow(
                 pullRequestItem = pullRequestItem,
+                viewModel = viewModel
             )
         }
     }
@@ -33,10 +40,40 @@ fun PullRequestScreen(navController: NavController?, viewModel: CodeReviewViewMo
 @Composable
 fun PullRequestItemRow(
     pullRequestItem: VSCPullrequest,
+    viewModel: CodeReviewViewModel
 ) {
-    Text(text = "" + pullRequestItem.id)
-    Text(text = pullRequestItem.title ?: "")
-    Text(text = pullRequestItem.url ?: "")
-    Text(text = "" + pullRequestItem.head.user.login)
-    Text(text = "" + pullRequestItem.head.repo.full_name)
+    Button(
+        onClick = {},
+        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+    ) {
+        Row(Modifier.fillMaxSize()) {
+            Spacer(modifier = Modifier.width(5.dp))
+            Box(Modifier.fillMaxSize()) {
+
+                Column(Modifier.fillMaxSize()) {
+                    Row {
+                        Text(
+                            text = pullRequestItem.head.repo.full_name ?: "",
+                            color = MaterialTheme.colors.primaryVariant,
+                            style = MaterialTheme.typography.subtitle1
+                        )
+                        Spacer(modifier = Modifier.weight(1f))
+                        Text(
+                            text = viewModel.calcUpdateDuration(
+                                pullRequestItem.updated_at ?: Date()
+                            ),
+                            color = MaterialTheme.colors.primaryVariant,
+                            style = MaterialTheme.typography.subtitle1
+                        )
+                    }
+                    Text(
+                        text = pullRequestItem.title ?: "",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h1
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+        }
+    }
 }

@@ -23,6 +23,7 @@ data class VSCPullrequest(
     val id: Int?,
     val title: String?,
     val url: String?,
+    val updated_at: Date?,
     val head: VSCHead
 )
 

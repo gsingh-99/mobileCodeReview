@@ -16,6 +16,8 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.time.LocalDateTime
+import java.util.*
 
 class CodeReviewViewModel(
     private val application: Application,
@@ -94,6 +96,22 @@ class CodeReviewViewModel(
 
         }
 
+    }
+
+    fun calcUpdateDuration(date: Date): String {
+        val current = Date()
+        val diff = current.time - date.time
+        val seconds = diff / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        val days = hours / 24
+        if (days > 1)
+            return "$days d"
+        else if (hours in 1..24)
+            return "$hours h"
+        else if (minutes in 1..60)
+            return "$minutes m"
+        return "$seconds s"
     }
 }
 
