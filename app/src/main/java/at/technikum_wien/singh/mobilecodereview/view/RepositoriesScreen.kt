@@ -14,9 +14,12 @@ import androidx.navigation.NavController
 import at.technikum_wien.singh.mobilecodereview.R
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
     LaunchedEffect(Unit, block = {
         if (viewModel.refreshApiCalls.value) {
             viewModel.getPullRequestList()
@@ -25,17 +28,23 @@ fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewM
         }
     })
     viewModel.title.value = stringResource(R.string.home_repository)
+    Text(text = viewModel.errorMessage)
     Column() {
         // Text(text = viewModel.errorMessage)
         Spacer(modifier = Modifier.width(24.dp))
-        LazyColumn(Modifier.fillMaxWidth()) {
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = { viewModel.getPullRequestList() },
+        ) {
+            LazyColumn(Modifier.fillMaxWidth()) {
 
-            items(viewModel.VSCRepositoryItemList) { repositoryItem ->
-                RepositoryItemRow(
-                    repositoryItemItem = repositoryItem,
-                    viewModel = viewModel
-                )
-                Spacer(modifier = Modifier.width(16.dp))
+                items(viewModel.VSCRepositoryItemList) { repositoryItem ->
+                    RepositoryItemRow(
+                        repositoryItemItem = repositoryItem,
+                        viewModel = viewModel
+                    )
+                    Spacer(modifier = Modifier.width(16.dp))
+                }
             }
         }
     }

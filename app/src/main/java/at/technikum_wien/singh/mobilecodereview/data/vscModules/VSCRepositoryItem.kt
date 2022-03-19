@@ -2,6 +2,8 @@ package at.technikum_wien.singh.mobilecodereview.data.vscModules
 
 import android.util.Log
 import at.technikum_wien.singh.mobilecodereview.data.enum.VSCType
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
@@ -42,19 +44,27 @@ data class VSCHead(
 )
 
 interface APIService {
-
+    @Headers(
+        "User-Agent: gsingh-99"
+    )
     @GET
     suspend fun getRepository(
         @Url url: String,
         @Header("Authorization") authorization: String
     ): VSCRepositoryItem
 
+    @Headers(
+        "User-Agent: gsingh-99"
+    )
     @GET
     suspend fun getPullRequests(
         @Url url: String,
         @Header("Authorization") authorization: String
     ): List<VSCPullrequest>
 
+    @Headers(
+        "User-Agent: gsingh-99"
+    )
     @GET
     suspend fun getPullRequest(
         @Url url: String,
@@ -62,13 +72,18 @@ interface APIService {
     ): VSCPullrequest
 
     companion object {
+        var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
         var apiService: APIService? = null
         fun getInstance(): APIService {
+            logging.setLevel(HttpLoggingInterceptor.Level.HEADERS)
+            var httpClient: OkHttpClient =
+                OkHttpClient().newBuilder().addInterceptor(logging).build()
             Log.d("Network", "Api call requested")
             if (apiService == null) {
                 apiService = Retrofit.Builder()
                     .baseUrl("https://api.github.com")
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient)
                     .build().create(APIService::class.java)
             }
             return apiService!!

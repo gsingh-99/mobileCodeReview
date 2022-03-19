@@ -14,6 +14,7 @@ import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.time.LocalDateTime
@@ -24,6 +25,7 @@ class CodeReviewViewModel(
     private val repository: RepositoryItemRepository
 ) :
     ViewModel() {
+    val isRefreshing = MutableStateFlow(false)
     val title = mutableStateOf("")
     val openGenericDialog = mutableStateOf(false)
     val openGenericDialogMessage = mutableStateOf("")

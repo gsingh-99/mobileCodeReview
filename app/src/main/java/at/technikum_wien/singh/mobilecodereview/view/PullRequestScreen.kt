@@ -9,6 +9,8 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -19,11 +21,13 @@ import at.technikum_wien.singh.mobilecodereview.R
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import java.util.*
 
 @Composable
 fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewModel) {
-    viewModel.repositoryItems.observeAsState()
+    val isRefreshing by viewModel.isRefreshing.collectAsState()
     LaunchedEffect(Unit, block = {
         if (viewModel.refreshApiCalls.value) {
             viewModel.getPullRequestList()
@@ -33,13 +37,18 @@ fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewMod
     })
     viewModel.title.value = stringResource(R.string.home_pull_request)
     Text(text = viewModel.errorMessage)
-    LazyColumn(Modifier.fillMaxWidth()) {
-        items(viewModel.VSCPullRequestList) { pullRequestItem ->
-            PullRequestItemRow(
-                pullRequestItem = pullRequestItem,
-                viewModel = viewModel,
-                navController = navController
-            )
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing),
+        onRefresh = { viewModel.getPullRequestList() },
+    ) {
+        LazyColumn(Modifier.fillMaxWidth()) {
+            items(viewModel.VSCPullRequestList) { pullRequestItem ->
+                PullRequestItemRow(
+                    pullRequestItem = pullRequestItem,
+                    viewModel = viewModel,
+                    navController = navController
+                )
+            }
         }
     }
 }
