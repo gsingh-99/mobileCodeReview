@@ -26,6 +26,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModelFactory
@@ -74,20 +75,24 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                             type = NavType.StringType
                         }
                     )) {
-                    var item: VSCPullrequest? = null
+                    var repoItem: RepositoryItem? = null
+                    var pullRequestItem: VSCPullrequest? = null
                     val link = it.arguments?.getString("repositoryIndex")
                     //link format item=##&number=##
-                    val itemUrl =
-                        link?.substring(link.lastIndexOf("url=")+4, link.indexOf("&number="))
+                    val itemIndex =
+                        link?.substring(link.lastIndexOf("item=") + 5, link.indexOf("&number="))
                     val numberIndex =
-                        link?.substring(link.lastIndexOf("&number=")+8)
-                    Log.d("Navigation", itemUrl?: "")
-                    Log.d("Navigation", numberIndex?: "")
-                    PullRequestDetailScreen(
-                        navController = navController,
-                        viewModel = viewModel,
-                        pullRequestItem = null
-                    )
+                        link?.substring(link.lastIndexOf("&number=") + 8)
+                    repoItem =
+                        viewModel.repositoryItems.value?.find { item -> item.id == itemIndex?.toLong() }
+                    if (repoItem != null) {
+                        viewModel.getPullRequest(repoItem.url+"/pulls/${numberIndex}", repoItem.token)
+                        PullRequestDetailScreen(
+                            navController = navController,
+                            viewModel = viewModel,
+                            repositoryItem = repoItem
+                        )
+                    }
                 }
             }
             GenericAlertDialog(viewModel = viewModel)

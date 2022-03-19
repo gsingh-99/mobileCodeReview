@@ -9,9 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItemRepository
-import at.technikum_wien.singh.mobilecodereview.data.vscModules.APIService
-import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
-import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
+import at.technikum_wien.singh.mobilecodereview.data.vscModules.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,6 +35,14 @@ class CodeReviewViewModel(
     private val _pullRequestList = mutableStateListOf<VSCPullrequest>()
     val VSCPullRequestList: List<VSCPullrequest>
         get() = _pullRequestList
+    private val _pullRequestDetail = mutableStateOf(
+        VSCPullrequest(
+            1L, 1, "", "", Date(), 1,
+            VSCHead(VSCUser(1, ""), VSCRepositoryItem(1, "", "", Date(), "", VSCUser(1, "")))
+        )
+    )
+    val VSCPullrequestDetail: MutableState<VSCPullrequest>
+        get() = _pullRequestDetail
     var errorMessage: String by mutableStateOf("")
 
     private val TAG = "ViewModel"
@@ -104,23 +110,20 @@ class CodeReviewViewModel(
         }
     }
 
-    fun getPullRequest(): VSCPullrequest? {
-        var pr: VSCPullrequest? = null
+    fun getPullRequest(url: String, token: String) {
         viewModelScope.launch {
             val apiService = APIService.getInstance()
             try {
-                pr =
+                VSCPullrequestDetail.value =
                     apiService.getPullRequest(
-                        "https://api.github.com/repos/gsingh-99/XSS-injection/pulls",
-                        "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"
-
+                        url,
+                        token
                     )
 
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }
         }
-        return pr
     }
 
     fun calcUpdateDuration(date: Date): String {
