@@ -27,6 +27,7 @@ class CodeReviewViewModel(
     val title = mutableStateOf("")
     val openGenericDialog = mutableStateOf(false)
     val openGenericDialogMessage = mutableStateOf("")
+    val refreshApiCalls = mutableStateOf(true)
     val repositoryItems by lazy { repository.repositoryItems }
     private val _githubRepositoryList = mutableStateListOf<VSCRepositoryItem>()
     val VSCRepositoryItemList: List<VSCRepositoryItem>
@@ -58,26 +59,19 @@ class CodeReviewViewModel(
     fun getGithubList() {
         viewModelScope.launch {
             val apiService = APIService.getInstance()
-
             _githubRepositoryList.clear()
-            repositoryItems.observeForever {
-                it.forEach {
-                    runBlocking {
-                        try {
-                            _githubRepositoryList.add(
-                                apiService.getRepository(
-                                    it.url,
-                                    it.token
-                                )
-                            )
-                        } catch (e: Exception) {
-                            errorMessage = e.message.toString()
-                        }
-
-                    }
+            repositoryItems.value?.forEach {
+                try {
+                    _githubRepositoryList.add(
+                        apiService.getRepository(
+                            it.url,
+                            it.token
+                        )
+                    )
+                } catch (e: Exception) {
+                    errorMessage = e.message.toString()
                 }
             }
-
         }
 
     }
@@ -87,22 +81,22 @@ class CodeReviewViewModel(
             val apiService = APIService.getInstance()
 
             _pullRequestList.clear()
-            repositoryItems.observeForever {
-                it.forEach {
-                    runBlocking {
-                        try {
-                            _pullRequestList.addAll(
-                                apiService.getPullRequests(
-                                    it.url + "/pulls",
-                                    it.token
-                                )
-                            )
-                        } catch (e: Exception) {
-                            errorMessage = e.message.toString()
-                        }
+            repositoryItems.value?.forEach {
 
-                    }
+                try {
+                    var pullRequestList = apiService.getPullRequests(
+                        it.url + "/pulls",
+                        it.token
+                    )
+                    pullRequestList.forEach { b -> b.repoId = it.id ?: 0 }
+                    _pullRequestList.addAll(
+                        pullRequestList
+                    )
+                } catch (e: Exception) {
+                    errorMessage = e.message.toString()
                 }
+
+
             }
 
         }

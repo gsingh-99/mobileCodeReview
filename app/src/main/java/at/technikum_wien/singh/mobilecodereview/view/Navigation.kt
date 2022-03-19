@@ -71,21 +71,33 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 composable(route = Screen.PullRequestDetailScreen.route + "/{repositoryIndex}",
                     arguments = listOf(
                         navArgument(name = "repositoryIndex") {
-                            type = NavType.IntType
+                            type = NavType.StringType
                         }
-                    )){
-                    var item : VSCPullrequest? = null
-                    val index = it.arguments?.getInt("repositoryIndex")
-
-                    PullRequestDetailScreen(navController = navController, viewModel = viewModel, pullRequestItem = null )
+                    )) {
+                    var item: VSCPullrequest? = null
+                    val link = it.arguments?.getString("repositoryIndex")
+                    //link format item=##&number=##
+                    val itemUrl =
+                        link?.substring(link.lastIndexOf("url=")+4, link.indexOf("&number="))
+                    val numberIndex =
+                        link?.substring(link.lastIndexOf("&number=")+8)
+                    Log.d("Navigation", itemUrl?: "")
+                    Log.d("Navigation", numberIndex?: "")
+                    PullRequestDetailScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        pullRequestItem = null
+                    )
                 }
             }
             GenericAlertDialog(viewModel = viewModel)
         },
         bottomBar = {
-            BottomAppBar(backgroundColor = MaterialTheme.colors.secondary, modifier = Modifier
-                .height(25.dp)
-                .fillMaxWidth()) {
+            BottomAppBar(
+                backgroundColor = MaterialTheme.colors.secondary, modifier = Modifier
+                    .height(25.dp)
+                    .fillMaxWidth()
+            ) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "Prototype by Gurparkash Singh 2022",

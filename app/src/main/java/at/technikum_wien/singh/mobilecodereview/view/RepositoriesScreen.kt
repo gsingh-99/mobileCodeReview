@@ -18,7 +18,11 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 @Composable
 fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
     LaunchedEffect(Unit, block = {
-        viewModel.getGithubList()
+        if (viewModel.refreshApiCalls.value) {
+            viewModel.getPullRequestList()
+            viewModel.getGithubList()
+            viewModel.refreshApiCalls.value = false
+        }
     })
     viewModel.title.value = stringResource(R.string.home_repository)
     Column() {

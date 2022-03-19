@@ -7,6 +7,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -21,6 +23,7 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 @Composable
 fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
     viewModel.title.value = stringResource(R.string.home_home)
+    viewModel.repositoryItems.observeAsState()
     Column {
         Button(
             onClick = { navController?.navigate(Screen.RepositoriesScreen.route) },

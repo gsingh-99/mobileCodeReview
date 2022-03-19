@@ -21,11 +21,14 @@ data class VSCRepositoryItem(
 )
 
 data class VSCPullrequest(
+    var repoId: Long,
     val id: Int?,
     val title: String?,
     val url: String?,
     val updated_at: Date?,
+    val number: Int,
     val head: VSCHead
+
 )
 
 data class VSCUser(
@@ -41,14 +44,27 @@ data class VSCHead(
 interface APIService {
 
     @GET
-    suspend fun getRepository(@Url url: String, @Header("Authorization") authorization: String): VSCRepositoryItem
+    suspend fun getRepository(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): VSCRepositoryItem
+
     @GET
-    suspend fun getPullRequests(@Url url: String, @Header("Authorization") authorization: String): List<VSCPullrequest>
+    suspend fun getPullRequests(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): List<VSCPullrequest>
+
     @GET
-    suspend fun getPullRequest(@Url url: String, @Header("Authorization") authorization: String): VSCPullrequest
+    suspend fun getPullRequest(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): VSCPullrequest
+
     companion object {
         var apiService: APIService? = null
         fun getInstance(): APIService {
+            Log.d("Network", "Api call requested")
             if (apiService == null) {
                 apiService = Retrofit.Builder()
                     .baseUrl("https://api.github.com")

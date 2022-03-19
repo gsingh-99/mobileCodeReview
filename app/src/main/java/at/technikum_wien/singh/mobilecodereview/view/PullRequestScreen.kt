@@ -9,6 +9,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -22,8 +23,13 @@ import java.util.*
 
 @Composable
 fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewModel) {
+    viewModel.repositoryItems.observeAsState()
     LaunchedEffect(Unit, block = {
-        viewModel.getPullRequestList()
+        if (viewModel.refreshApiCalls.value) {
+            viewModel.getPullRequestList()
+            viewModel.getGithubList()
+            viewModel.refreshApiCalls.value = false
+        }
     })
     viewModel.title.value = stringResource(R.string.home_pull_request)
     Text(text = viewModel.errorMessage)
@@ -45,7 +51,7 @@ fun PullRequestItemRow(
     navController: NavController
 ) {
     Button(
-        onClick = { navController.navigate(Screen.PullRequestDetailScreen.route) },
+        onClick = { navController.navigate(Screen.PullRequestDetailScreen.route + "/url=${pullRequestItem.repoId}&number=${pullRequestItem.number}") },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
     ) {
         Row(Modifier.fillMaxSize()) {
