@@ -37,8 +37,19 @@ class CodeReviewViewModel(
         get() = _pullRequestList
     private val _pullRequestDetail = mutableStateOf(
         VSCPullrequest(
-            1L, 1, "", "", Date(), 1,
-            VSCHead(VSCUser(1, ""), VSCRepositoryItem(1, "", "", Date(), "", VSCUser(1, "")))
+            1L,
+            1,
+            "",
+            "",
+            Date(),
+            1,
+            "",
+            "",
+            1,
+            1,
+            VSCUser(1, ""),
+            VSCHead(VSCUser(1, ""), VSCRepositoryItem(1, "", "", Date(), "", VSCUser(1, "")), ""),
+            VSCBase("")
         )
     )
     val VSCPullrequestDetail: MutableState<VSCPullrequest>
@@ -73,7 +84,7 @@ class CodeReviewViewModel(
                     _githubRepositoryList.add(
                         apiService.getRepository(
                             it.url,
-                            it.token
+                            " token " + it.token
                         )
                     )
                 } catch (e: Exception) {
@@ -94,7 +105,7 @@ class CodeReviewViewModel(
                 try {
                     var pullRequestList = apiService.getPullRequests(
                         it.url + "/pulls",
-                        it.token
+                        " token " + it.token
                     )
                     pullRequestList.forEach { b -> b.repoId = it.id ?: 0 }
                     _pullRequestList.addAll(
@@ -117,7 +128,7 @@ class CodeReviewViewModel(
                 VSCPullrequestDetail.value =
                     apiService.getPullRequest(
                         url,
-                        token
+                        " token $token"
                     )
 
             } catch (e: Exception) {

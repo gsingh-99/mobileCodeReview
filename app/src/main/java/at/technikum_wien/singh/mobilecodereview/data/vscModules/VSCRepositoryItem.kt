@@ -19,7 +19,6 @@ data class VSCRepositoryItem(
     val updated_at: Date?,
     val url: String,
     val owner: VSCUser
-
 )
 
 data class VSCPullrequest(
@@ -29,8 +28,13 @@ data class VSCPullrequest(
     val url: String?,
     val updated_at: Date?,
     val number: Int,
-    val head: VSCHead
-
+    val state: String?,
+    val body: String?,
+    val commits: Int?,
+    val changed_files: Int?,
+    val user: VSCUser,
+    val head: VSCHead,
+    val base: VSCBase
 )
 
 data class VSCUser(
@@ -40,7 +44,12 @@ data class VSCUser(
 
 data class VSCHead(
     val user: VSCUser,
-    val repo: VSCRepositoryItem
+    val repo: VSCRepositoryItem,
+    val ref: String
+)
+
+data class VSCBase(
+    val ref: String
 )
 
 interface APIService {
