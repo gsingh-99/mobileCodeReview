@@ -28,6 +28,7 @@ class CodeReviewViewModel(
     val openGenericDialog = mutableStateOf(false)
     val openGenericDialogMessage = mutableStateOf("")
     val refreshApiCalls = mutableStateOf(true)
+    val refreshApiCallsDetails = mutableStateOf(true)
     val repositoryItems by lazy { repository.repositoryItems }
     private val _githubRepositoryList = mutableStateListOf<VSCRepositoryItem>()
     val VSCRepositoryItemList: List<VSCRepositoryItem>
@@ -54,6 +55,10 @@ class CodeReviewViewModel(
     )
     val VSCPullrequestDetail: MutableState<VSCPullrequest>
         get() = _pullRequestDetail
+
+    private val _pullRequestDetailCommits = mutableStateListOf<VSCCommits>()
+    val VSCPullrequestDetailCommits: List<VSCCommits>
+        get() = _pullRequestDetailCommits
     var errorMessage: String by mutableStateOf("")
 
     private val TAG = "ViewModel"
@@ -61,7 +66,7 @@ class CodeReviewViewModel(
     fun addRepository() {
         application.onTerminate()
         val repositoryItem = RepositoryItem(
-            "https://api.github.com/repos/gsingh-99/ProductCatalog",
+            "https://api.github.com/repos/gsingh-99/XSS-injection",
             "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"
         )
         viewModelScope.launch {
@@ -125,12 +130,28 @@ class CodeReviewViewModel(
         viewModelScope.launch {
             val apiService = APIService.getInstance()
             try {
-                VSCPullrequestDetail.value =
+                _pullRequestDetail.value =
                     apiService.getPullRequest(
                         url,
                         " token $token"
                     )
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
 
+    fun getPullRequestCommits(url: String, token: String) {
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
+            try {
+                _pullRequestDetailCommits.clear()
+                _pullRequestDetailCommits.addAll(
+                    apiService.getPullRequestCommits(
+                        url,
+                        " token $token"
+                    )
+                )
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }

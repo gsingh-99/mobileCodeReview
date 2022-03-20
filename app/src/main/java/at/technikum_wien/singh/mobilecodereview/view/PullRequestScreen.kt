@@ -28,6 +28,7 @@ import java.util.*
 @Composable
 fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewModel) {
     val isRefreshing by viewModel.isRefreshing.collectAsState()
+   // viewModel.refreshApiCallsDetails.value = true
     LaunchedEffect(Unit, block = {
         if (viewModel.refreshApiCalls.value) {
             viewModel.getPullRequestList()

@@ -52,6 +52,32 @@ data class VSCBase(
     val ref: String
 )
 
+data class VSCCommitAuthor(
+    val name: String
+)
+
+data class VSCCommit(
+    val author: VSCCommitAuthor,
+    val message: String
+)
+
+data class VSCCommits(
+    val commit: VSCCommit
+)
+
+data class VSCComment(
+    val user: VSCUser,
+    val body: String
+)
+
+fun String.capitalized(): String {
+    return this.replaceFirstChar {
+        if (it.isLowerCase())
+            it.titlecase(Locale.getDefault())
+        else it.toString()
+    }
+}
+
 interface APIService {
     @Headers(
         "User-Agent: gsingh-99"
@@ -79,6 +105,15 @@ interface APIService {
         @Url url: String,
         @Header("Authorization") authorization: String
     ): VSCPullrequest
+
+    @Headers(
+        "User-Agent: gsingh-99"
+    )
+    @GET
+    suspend fun getPullRequestCommits(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): List<VSCCommits>
 
     companion object {
         var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()

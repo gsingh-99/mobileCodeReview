@@ -51,11 +51,19 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 } else {
                     Spacer(modifier = Modifier.width(48.dp))
                 }
-                Text(
-                    text = viewModel.title.value,
-                    color = MaterialTheme.colors.secondary,
-                    style = MaterialTheme.typography.body1
-                )
+                Column {
+                    Text(
+                        text = viewModel.title.value,
+                        color = MaterialTheme.colors.secondary,
+                        style = MaterialTheme.typography.body1
+                    )
+                    if (navBackStackEntry?.destination?.route.equals("pullRequest_detail_screen/{repositoryIndex}"))
+                        Text(
+                            text = viewModel.VSCPullrequestDetail.value.head.repo.full_name ?: "",
+                            color = MaterialTheme.colors.secondary,
+                            style = MaterialTheme.typography.subtitle1
+                        )
+                }
             }
         },
         content = {
@@ -86,7 +94,10 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     repoItem =
                         viewModel.repositoryItems.value?.find { item -> item.id == itemIndex?.toLong() }
                     if (repoItem != null) {
-                        viewModel.getPullRequest(repoItem.url+"/pulls/${numberIndex}", repoItem.token)
+                        viewModel.getPullRequest(
+                            repoItem.url + "/pulls/${numberIndex}",
+                            repoItem.token
+                        )
                         PullRequestDetailScreen(
                             navController = navController,
                             viewModel = viewModel,
