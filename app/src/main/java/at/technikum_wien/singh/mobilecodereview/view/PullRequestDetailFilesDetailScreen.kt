@@ -1,15 +1,9 @@
 package at.technikum_wien.singh.mobilecodereview.view
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -17,12 +11,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCFile
 import at.technikum_wien.singh.mobilecodereview.ui.theme.Black
-import at.technikum_wien.singh.mobilecodereview.ui.theme.MobileCodeReviewTheme
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
@@ -33,13 +25,11 @@ fun PullRequestDetailFilesDetailScreen(
 ) {
     viewModel.title.value = file?.filename ?: "This file is too large to preview."
     val stringList = viewModel.breakLineToArray(file?.patch ?: "")
-    var maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.02)
-    if (stringList.size > 10)
-        maxScreenWidth = maxScreenWidth.times(3)
-    if (stringList.size > 100)
-        maxScreenWidth = maxScreenWidth.times(3)
-    if (stringList.size > 1000)
-        maxScreenWidth = maxScreenWidth.times(3)
+    val numberList = viewModel.breakLineNumbersToArray(stringList)
+    var maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.09)
+    var maxScreenHeight = LocalConfiguration.current.screenHeightDp.times(0.87)
+
+    Box(modifier = Modifier.heightIn(0.dp, maxScreenHeight.dp)) {
     LazyColumn(Modifier.fillMaxWidth()) {
         itemsIndexed(stringList) { index, text ->
             Row(
@@ -50,14 +40,13 @@ fun PullRequestDetailFilesDetailScreen(
                     Modifier
                         .widthIn(maxScreenWidth.dp, maxScreenWidth.dp)
                 ) {
-                    if (!text.startsWith("@@"))
-                        Text(
-                            text = "$index",
-                            color = Black,
-                            textAlign = TextAlign.Right,
-                            style = MaterialTheme.typography.h6,
-                            modifier = Modifier.fillMaxWidth()
-                        )
+                    Text(
+                        text = numberList[index],
+                        color = Black,
+                        textAlign = TextAlign.Right,
+                        style = MaterialTheme.typography.h6,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
                 Column(
                     Modifier
@@ -72,7 +61,7 @@ fun PullRequestDetailFilesDetailScreen(
                 }
             }
         }
-    }
+    }}
     //Text(text = file?.patch ?: "")
 }
 

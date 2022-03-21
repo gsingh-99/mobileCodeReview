@@ -1,10 +1,7 @@
 package at.technikum_wien.singh.mobilecodereview.viewmodel
 
 import android.app.Application
-import android.util.Log
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -13,12 +10,8 @@ import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItemRepository
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.*
 import at.technikum_wien.singh.mobilecodereview.ui.theme.*
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import java.time.LocalDateTime
 import java.util.*
 
 class CodeReviewViewModel(
@@ -210,6 +203,40 @@ class CodeReviewViewModel(
         return stringList
     }
 
+    fun breakLineNumbersToArray(textList: List<String>): List<String> {
+        var minusIndex = 0
+        var plusIndex = 0
+        var stringList = mutableListOf<String>()
+        textList.forEach {
+            if (it.startsWith("@@")) {
+                minusIndex =
+                    it.substring((it.indexOf("@@ -") + 4), it.indexOf(",")).toInt()
+                if (it.substring(it.indexOf("+") + 1, it.length).contains(",")) {
+                    plusIndex =
+                        it.substring(it.indexOf("+") + 1, it.lastIndexOf(",")).toInt()
+                } else {
+                    plusIndex =
+                        it.substring(it.indexOf("+") + 1, it.length - 3).toInt()
+                    stringList.add("")
+                }
+            } else {
+                if (it.startsWith("+")) {
+                    stringList.add("$plusIndex")
+                    plusIndex++
+                } else if (it.startsWith("-")) {
+                    stringList.add("$minusIndex")
+                    minusIndex++
+                } else {
+                    stringList.add("$minusIndex")
+                    plusIndex++
+                    minusIndex++
+                }
+
+            }
+        }
+        return stringList
+    }
+
     fun patchTextColor(text: String): Color {
         if (text.startsWith("@@"))
             return BabyBlue
@@ -229,6 +256,7 @@ class CodeReviewViewModel(
             return WineRedLighter
         return White
     }
+
 }
 
 class CodeReviewViewModelFactory(
