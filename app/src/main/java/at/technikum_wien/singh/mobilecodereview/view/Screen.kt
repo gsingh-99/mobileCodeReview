@@ -6,5 +6,7 @@ sealed class Screen(val route: String) {
     object PullRequestScreen : Screen(route = "pullRequest_screen")
     object RepositoriesScreen : Screen(route = "repositories_screen")
     object PullRequestDetailScreen : Screen(route = "pullRequest_detail_screen")
-    object PulRequestDetailCommitsScreen : Screen(route = "pullRequest_detail_screen_commits")
+    object PullRequestDetailCommitsScreen : Screen(route = "pullRequest_detail_screen_commits")
+    object PullRequestDetailFilesScreen : Screen(route = "pullRequest_detail_screen_files")
+
 }

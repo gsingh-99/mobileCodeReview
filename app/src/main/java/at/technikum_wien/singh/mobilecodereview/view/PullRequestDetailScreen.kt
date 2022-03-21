@@ -60,23 +60,24 @@ fun PullRequestDetailScreen(
             } else {
                 Spacer(modifier = Modifier.height(18.dp))
             }
-
-            if (viewModel.VSCPullrequestDetail.value.changed_files != 1)
-                Text(
-                    text = "${viewModel.VSCPullrequestDetail.value.changed_files} files changed",
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h1
-                )
-            else
-                Text(
-                    text = "${viewModel.VSCPullrequestDetail.value.changed_files} file changed",
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h1
-                )
-
+            Box(modifier = Modifier.clickable
+            { navController?.navigate(Screen.PullRequestDetailFilesScreen.route + "/${repositoryItem?.id}") }) {
+                if (viewModel.VSCPullrequestDetail.value.changed_files != 1)
+                    Text(
+                        text = "${viewModel.VSCPullrequestDetail.value.changed_files} files changed",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h1
+                    )
+                else
+                    Text(
+                        text = "${viewModel.VSCPullrequestDetail.value.changed_files} file changed",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h1
+                    )
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Box(modifier = Modifier.clickable
-            { navController?.navigate(Screen.PulRequestDetailCommitsScreen.route + "/${repositoryItem?.id}") }) {
+            { navController?.navigate(Screen.PullRequestDetailCommitsScreen.route + "/${repositoryItem?.id}") }) {
                 if (viewModel.VSCPullrequestDetail.value.commits != 1)
                     Text(
                         text = "${viewModel.VSCPullrequestDetail.value.commits} commits",

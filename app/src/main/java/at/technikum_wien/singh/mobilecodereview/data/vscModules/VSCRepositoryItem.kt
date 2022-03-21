@@ -39,6 +39,7 @@ data class VSCPullrequest(
 )
 
 data class VSCLinks(
+    val self: VSCHref,
     val issue: VSCHref,
     val comments: VSCHref,
     val review_comments: VSCHref,
@@ -80,7 +81,8 @@ data class VSCFile(
     val additions: Int,
     val deletions: Int,
     val changes: Int,
-    val patch: String
+    val patch: String,
+    val raw_url: String
 )
 
 data class VSCCommits(
@@ -136,6 +138,7 @@ interface APIService {
         @Url url: String,
         @Header("Authorization") authorization: String
     ): List<VSCCommits>
+
     @Headers(
         "User-Agent: gsingh-99"
     )

@@ -51,7 +51,7 @@ class CodeReviewViewModel(
             VSCUser(1, ""),
             VSCHead(VSCUser(1, ""), VSCRepositoryItem(1, "", "", Date(), "", VSCUser(1, "")), ""),
             VSCBase(""),
-            VSCLinks(VSCHref(""), VSCHref(""), VSCHref(""), VSCHref(""))
+            VSCLinks(VSCHref(""), VSCHref(""), VSCHref(""), VSCHref(""), VSCHref(""))
         )
     )
     val VSCPullrequestDetail: MutableState<VSCPullrequest>
@@ -162,6 +162,7 @@ class CodeReviewViewModel(
             }
         }
     }
+
     fun getPullRequestFiles(url: String, token: String) {
         viewModelScope.launch {
             val apiService = APIService.getInstance()

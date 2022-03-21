@@ -93,7 +93,7 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     }
                 }
                 composable(
-                    route = Screen.PulRequestDetailCommitsScreen.route + "/{repositoryIndex}",
+                    route = Screen.PullRequestDetailCommitsScreen.route + "/{repositoryIndex}",
                     arguments = listOf(
                         navArgument(name = "repositoryIndex") {
                             type = NavType.LongType
@@ -104,6 +104,23 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     repoItem =
                         viewModel.repositoryItems.value?.find { item -> item.id == index }
                     PullRequestDetailCommitsScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        repositoryItem = repoItem
+                    )
+                }
+                composable(
+                    route = Screen.PullRequestDetailFilesScreen.route + "/{repositoryIndex}",
+                    arguments = listOf(
+                        navArgument(name = "repositoryIndex") {
+                            type = NavType.LongType
+                        })
+                ) {
+                    val index = it.arguments?.getLong("repositoryIndex")
+                    var repoItem: RepositoryItem? = null
+                    repoItem =
+                        viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    PullRequestDetailFilesScreen(
                         navController = navController,
                         viewModel = viewModel,
                         repositoryItem = repoItem
