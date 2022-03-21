@@ -1,8 +1,10 @@
 package at.technikum_wien.singh.mobilecodereview.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Checkbox
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -32,12 +34,14 @@ fun PullRequestDetailFilesScreen(
     viewModel.title.value = "Files"
     val maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.7)
     LazyColumn(Modifier.fillMaxWidth()) {
-        items(viewModel.VSCPullrequestDetailFiles) { files ->
+        items(viewModel.VSCPullrequestDetailFiles) { file ->
             Box(Modifier.padding(8.dp)) {
                 Row() {
-                    Column(modifier = Modifier.widthIn(0.dp, maxScreenWidth.dp)) {
+                    Column(modifier = Modifier
+                        .widthIn(0.dp, maxScreenWidth.dp)
+                        .clickable { navController?.navigate(Screen.PullRequestDetailFilesDetailScreen.route + "/${file.sha}") }) {
                         Text(
-                            text = files.filename,
+                            text = file.filename,
                             color = MaterialTheme.colors.primary,
                             style = MaterialTheme.typography.h1,
                             maxLines = 1,
@@ -45,11 +49,7 @@ fun PullRequestDetailFilesScreen(
                         )
                     }
 
-                    Text(
-                        text = files.patch,
-                        color = MaterialTheme.colors.primaryVariant,
-                        style = MaterialTheme.typography.subtitle2
-                    )
+                    Checkbox(checked = false, onCheckedChange = {})
                 }
             }
         }

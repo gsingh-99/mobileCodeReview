@@ -80,11 +80,11 @@ fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
     }
 
 }
-
+/*
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     MobileCodeReviewTheme {
         //   MainScreen(null)
     }
-}
+}*/

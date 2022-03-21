@@ -2,14 +2,17 @@ package at.technikum_wien.singh.mobilecodereview.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItemRepository
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.*
+import at.technikum_wien.singh.mobilecodereview.ui.theme.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -194,6 +197,37 @@ class CodeReviewViewModel(
         else if (minutes in 1..60)
             return "$minutes m"
         return "$seconds s"
+    }
+
+    fun breakLineToArray(text: String): List<String> {
+        var text = text
+        var stringList = mutableListOf<String>()
+        while (text.contains("\n")) {
+            stringList.add(text.substring(0, text.indexOf("\n")))
+            text = text.replace(text.substring(0, text.indexOf("\n") + 1), "")
+        }
+        stringList.add(text)
+        return stringList
+    }
+
+    fun patchTextColor(text: String): Color {
+        if (text.startsWith("@@"))
+            return BabyBlue
+        if (text.startsWith("+"))
+            return LimeGreen
+        if (text.startsWith("-"))
+            return WineRed
+        return WhiteGray
+    }
+
+    fun patchTextColorLighter(text: String): Color {
+        if (text.startsWith("@@"))
+            return BabyBlueLighter
+        if (text.startsWith("+"))
+            return LimeGreenLighter
+        if (text.startsWith("-"))
+            return WineRedLighter
+        return White
     }
 }
 

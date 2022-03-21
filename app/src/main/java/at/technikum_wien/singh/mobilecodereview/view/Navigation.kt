@@ -15,6 +15,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
+import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCFile
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
@@ -124,6 +125,23 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         navController = navController,
                         viewModel = viewModel,
                         repositoryItem = repoItem
+                    )
+                }
+                composable(
+                    route = Screen.PullRequestDetailFilesDetailScreen.route + "/{fileSha}",
+                    arguments = listOf(
+                        navArgument(name = "fileSha") {
+                            type = NavType.StringType
+                        })
+                ) {
+                    val index = it.arguments?.getString("fileSha")
+                    var vscFile: VSCFile? = null
+                    vscFile =
+                        viewModel.VSCPullrequestDetailFiles.find { item -> item.sha == index }
+                    PullRequestDetailFilesDetailScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        file = vscFile
                     )
                 }
             }

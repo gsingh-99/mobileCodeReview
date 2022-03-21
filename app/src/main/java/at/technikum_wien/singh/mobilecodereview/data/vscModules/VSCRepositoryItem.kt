@@ -77,6 +77,7 @@ data class VSCCommit(
 
 
 data class VSCFile(
+    val sha: String,
     val filename: String,
     val additions: Int,
     val deletions: Int,
