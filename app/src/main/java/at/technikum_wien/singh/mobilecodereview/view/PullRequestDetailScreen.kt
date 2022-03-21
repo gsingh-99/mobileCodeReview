@@ -1,13 +1,17 @@
 package at.technikum_wien.singh.mobilecodereview.view
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,17 +32,6 @@ fun PullRequestDetailScreen(
 ) {
     viewModel.title.value =
         viewModel.VSCPullrequestDetail.value.title ?: "Pull Request Detail Screen"
-    LaunchedEffect(Unit, block = {
-        if (viewModel.refreshApiCallsDetails.value) {
-            if (repositoryItem != null) {
-                viewModel.getPullRequestCommits(
-                    repositoryItem.url + "/pulls/${viewModel.VSCPullrequestDetail.value.number}/commits",
-                    repositoryItem.token
-                )
-            }
-            viewModel.refreshApiCallsDetails.value = false
-        }
-    })
 
     Row(modifier = Modifier.fillMaxWidth()) {
         Spacer(modifier = Modifier.width(12.dp))
@@ -67,6 +60,7 @@ fun PullRequestDetailScreen(
             } else {
                 Spacer(modifier = Modifier.height(18.dp))
             }
+
             if (viewModel.VSCPullrequestDetail.value.changed_files != 1)
                 Text(
                     text = "${viewModel.VSCPullrequestDetail.value.changed_files} files changed",
@@ -79,19 +73,24 @@ fun PullRequestDetailScreen(
                     color = MaterialTheme.colors.primary,
                     style = MaterialTheme.typography.h1
                 )
+
             Spacer(modifier = Modifier.height(24.dp))
-            if (viewModel.VSCPullrequestDetail.value.commits != 1)
-                Text(
-                    text = "${viewModel.VSCPullrequestDetail.value.commits} commits",
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h1
-                )
-            else
-                Text(
-                    text = "${viewModel.VSCPullrequestDetail.value.commits} commit",
-                    color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h1
-                )
+            Box(modifier = Modifier.clickable
+            { navController?.navigate(Screen.PulRequestDetailCommitsScreen.route + "/${repositoryItem?.id}") }) {
+                if (viewModel.VSCPullrequestDetail.value.commits != 1)
+                    Text(
+                        text = "${viewModel.VSCPullrequestDetail.value.commits} commits",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h1
+
+                    )
+                else
+                    Text(
+                        text = "${viewModel.VSCPullrequestDetail.value.commits} commit",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h1
+                    )
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = "Static code analysis",
@@ -110,11 +109,7 @@ fun PullRequestDetailScreen(
                 color = MaterialTheme.colors.primary,
                 style = MaterialTheme.typography.h1
             )
-            LazyColumn(Modifier.fillMaxWidth()) {
-                items(viewModel.VSCPullrequestDetailCommits) { commit ->
-                    Text(text = commit.commit.message)
-                }
-            }
+
 
         }
         Spacer(modifier = Modifier.width(12.dp))
