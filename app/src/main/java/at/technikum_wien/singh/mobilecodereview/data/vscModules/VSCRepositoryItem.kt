@@ -34,7 +34,19 @@ data class VSCPullrequest(
     val changed_files: Int?,
     val user: VSCUser,
     val head: VSCHead,
-    val base: VSCBase
+    val base: VSCBase,
+    val _links: VSCLinks
+)
+
+data class VSCLinks(
+    val issue: VSCHref,
+    val comments: VSCHref,
+    val review_comments: VSCHref,
+    val commits: VSCHref
+)
+
+data class VSCHref(
+    val href: String
 )
 
 data class VSCUser(
@@ -53,12 +65,22 @@ data class VSCBase(
 )
 
 data class VSCCommitAuthor(
-    val name: String
+    val name: String,
+    val date: Date
 )
 
 data class VSCCommit(
     val author: VSCCommitAuthor,
     val message: String
+)
+
+
+data class VSCFile(
+    val filename: String,
+    val additions: Int,
+    val deletions: Int,
+    val changes: Int,
+    val patch: String
 )
 
 data class VSCCommits(
@@ -114,6 +136,14 @@ interface APIService {
         @Url url: String,
         @Header("Authorization") authorization: String
     ): List<VSCCommits>
+    @Headers(
+        "User-Agent: gsingh-99"
+    )
+    @GET
+    suspend fun getPullRequestFiles(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): List<VSCFile>
 
     companion object {
         var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()

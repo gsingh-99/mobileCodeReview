@@ -1,25 +1,13 @@
 package at.technikum_wien.singh.mobilecodereview.view
 
-import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import at.technikum_wien.singh.mobilecodereview.R
-import at.technikum_wien.singh.mobilecodereview.ui.theme.MobileCodeReviewTheme
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,7 +17,6 @@ import androidx.navigation.navArgument
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
-import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModelFactory
 
 const val name = "User"
 
@@ -57,7 +44,7 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         color = MaterialTheme.colors.secondary,
                         style = MaterialTheme.typography.body1
                     )
-                    if (navBackStackEntry?.destination?.route.equals("pullRequest_detail_screen/{repositoryIndex}"))
+                    if (navBackStackEntry?.destination?.route.equals("pullRequest_detail_screen/{repositoryLink}"))
                         Text(
                             text = viewModel.VSCPullrequestDetail.value.head.repo.full_name ?: "",
                             color = MaterialTheme.colors.secondary,
@@ -77,15 +64,15 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 composable(route = Screen.PullRequestScreen.route) {
                     PullRequestScreen(navController = navController, viewModel = viewModel)
                 }
-                composable(route = Screen.PullRequestDetailScreen.route + "/{repositoryIndex}",
+                composable(route = Screen.PullRequestDetailScreen.route + "/{repositoryLink}",
                     arguments = listOf(
-                        navArgument(name = "repositoryIndex") {
+                        navArgument(name = "repositoryLink") {
                             type = NavType.StringType
                         }
                     )) {
                     var repoItem: RepositoryItem? = null
                     var pullRequestItem: VSCPullrequest? = null
-                    val link = it.arguments?.getString("repositoryIndex")
+                    val link = it.arguments?.getString("repositoryLink")
                     //link format item=##&number=##
                     val itemIndex =
                         link?.substring(link.lastIndexOf("item=") + 5, link.indexOf("&number="))
@@ -104,6 +91,23 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                             repositoryItem = repoItem
                         )
                     }
+                }
+                composable(
+                    route = Screen.PulRequestDetailCommitsScreen.route + "/{repositoryIndex}",
+                    arguments = listOf(
+                        navArgument(name = "repositoryIndex") {
+                            type = NavType.LongType
+                        })
+                ) {
+                    val index = it.arguments?.getLong("repositoryIndex")
+                    var repoItem: RepositoryItem? = null
+                    repoItem =
+                        viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    PullRequestDetailCommitsScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        repositoryItem = repoItem
+                    )
                 }
             }
             GenericAlertDialog(viewModel = viewModel)

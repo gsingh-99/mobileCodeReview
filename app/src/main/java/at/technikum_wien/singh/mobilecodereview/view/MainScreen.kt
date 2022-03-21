@@ -1,6 +1,7 @@
 package at.technikum_wien.singh.mobilecodereview.view
 
 import android.widget.Space
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -24,11 +25,12 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
     viewModel.title.value = stringResource(R.string.home_home)
     viewModel.repositoryItems.observeAsState()
-    Column {
-        Button(
-            onClick = { navController?.navigate(Screen.RepositoriesScreen.route) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
+    Column() {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+                .clickable { navController?.navigate(Screen.RepositoriesScreen.route) }
         ) {
             Icon(
                 painter = painterResource(R.drawable.outline_storage_24),
@@ -42,11 +44,12 @@ fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
             )
             Spacer(modifier = Modifier.weight(1f))
         }
-        Button(
-            onClick = { navController?.navigate(Screen.PullRequestScreen.route) },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
-        ) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+            .clickable {
+                navController?.navigate(Screen.PullRequestScreen.route)
+            }) {
             Icon(
                 painter = painterResource(R.drawable.ic_pull_request),
                 modifier = Modifier.size(24.dp),

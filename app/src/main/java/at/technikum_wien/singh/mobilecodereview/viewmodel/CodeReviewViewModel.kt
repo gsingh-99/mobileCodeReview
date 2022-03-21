@@ -50,7 +50,8 @@ class CodeReviewViewModel(
             1,
             VSCUser(1, ""),
             VSCHead(VSCUser(1, ""), VSCRepositoryItem(1, "", "", Date(), "", VSCUser(1, "")), ""),
-            VSCBase("")
+            VSCBase(""),
+            VSCLinks(VSCHref(""), VSCHref(""), VSCHref(""), VSCHref(""))
         )
     )
     val VSCPullrequestDetail: MutableState<VSCPullrequest>
@@ -59,6 +60,10 @@ class CodeReviewViewModel(
     private val _pullRequestDetailCommits = mutableStateListOf<VSCCommits>()
     val VSCPullrequestDetailCommits: List<VSCCommits>
         get() = _pullRequestDetailCommits
+
+    private val _pullRequestDetailFiles = mutableStateListOf<VSCFile>()
+    val VSCPullrequestDetailFiles: List<VSCFile>
+        get() = _pullRequestDetailFiles
     var errorMessage: String by mutableStateOf("")
 
     private val TAG = "ViewModel"
@@ -157,6 +162,22 @@ class CodeReviewViewModel(
             }
         }
     }
+    fun getPullRequestFiles(url: String, token: String) {
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
+            try {
+                _pullRequestDetailFiles.clear()
+                _pullRequestDetailFiles.addAll(
+                    apiService.getPullRequestFiles(
+                        url,
+                        " token $token"
+                    )
+                )
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
 
     fun calcUpdateDuration(date: Date): String {
         val current = Date()
@@ -165,7 +186,7 @@ class CodeReviewViewModel(
         val minutes = seconds / 60
         val hours = minutes / 60
         val days = hours / 24
-        if (days > 1)
+        if (days >= 1)
             return "$days d"
         else if (hours in 1..24)
             return "$hours h"
