@@ -127,7 +127,7 @@ class CodeReviewViewModel(
             repositoryItems.value?.forEach {
 
                 try {
-                    var pullRequestList = apiService.getPullRequests(
+                    val pullRequestList = apiService.getPullRequests(
                         it.url + "/pulls",
                         " token " + it.token
                     )
@@ -230,46 +230,58 @@ class CodeReviewViewModel(
     }
 
     fun breakLineToArray(text: String): List<String> {
-        var text = text
-        var stringList = mutableListOf<String>()
-        while (text.contains("\n")) {
-            stringList.add(text.substring(0, text.indexOf("\n")))
-            text = text.replaceFirst(text.substring(0, text.indexOf("\n") + 1), "")
+        var lineText = text
+        val stringList = mutableListOf<String>()
+        while (lineText.contains("\n")) {
+            if (!lineText.startsWith("\\ No newline at end of file"))
+                stringList.add(lineText.substring(0, lineText.indexOf("\n")))
+            lineText = lineText.replaceFirst(lineText.substring(0, lineText.indexOf("\n") + 1), "")
         }
-        stringList.add(text)
+        stringList.add(lineText)
         return stringList
     }
 
     fun breakLineNumbersToArray(textList: List<String>): List<String> {
         var minusIndex = 0
         var plusIndex = 0
-        var stringList = mutableListOf<String>()
+        val stringList = mutableListOf<String>()
         if (textList.size > 1)
             textList.forEach {
                 if (it.startsWith("@@")) {
+                    val minusText = it.removeRange(it.indexOf(" +"), it.length)
+
                     minusIndex =
-                        it.substring((it.indexOf("@@ -") + 4), it.indexOf(",")).toInt()
-                    if (it.substring(it.indexOf("+") + 1, it.length).contains(",")) {
-                        plusIndex =
-                            it.substring(it.indexOf("+") + 1, it.lastIndexOf(",")).toInt()
+                        if (minusText.substring(minusText.indexOf("-") + 1).contains(",")) {
+                            minusText.substring(
+                                (minusText.indexOf("@@ -") + 4),
+                                minusText.indexOf(",")
+                            ).toInt()
+                        } else {
+                            minusText.substring((minusText.indexOf("@@ -") + 4)).toInt()
+                        }
+                    plusIndex = if (it.substring(it.indexOf("+") + 1, it.length).contains(",")) {
+                        it.substring(it.indexOf("+") + 1, it.lastIndexOf(",")).toInt()
                     } else {
-                        plusIndex =
-                            it.substring(it.indexOf("+") + 1, it.length - 3).toInt()
+                        it.substring(it.indexOf("+") + 1, it.length - 3).toInt()
                     }
                     stringList.add("")
                 } else {
-                    if (it.startsWith("+")) {
-                        stringList.add("$plusIndex")
-                        plusIndex++
-                    } else if (it.startsWith("-")) {
-                        stringList.add("$minusIndex")
-                        minusIndex++
-                    } else {
-                        stringList.add("$minusIndex")
-                        plusIndex++
-                        minusIndex++
-                    }
+                    when {
+                        it.startsWith("+") -> {
+                            stringList.add("$plusIndex")
+                            plusIndex++
+                        }
+                        it.startsWith("-") -> {
+                            stringList.add("$minusIndex")
+                            minusIndex++
+                        }
+                        else -> {
+                            stringList.add("$minusIndex")
+                            plusIndex++
+                            minusIndex++
+                        }
 
+                    }
                 }
             }
         return stringList
