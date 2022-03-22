@@ -19,15 +19,15 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
 fun PullRequestDetailFilesDetailScreen(
-    navController: NavController?,
+    //navController: NavController,
     viewModel: CodeReviewViewModel,
     file: VSCFile?,
 ) {
     viewModel.title.value = file?.filename ?: ""
     val stringList = viewModel.breakLineToArray(file?.patch ?: "")
     val numberList = viewModel.breakLineNumbersToArray(stringList)
-    var maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.09)
-    var maxScreenHeight = LocalConfiguration.current.screenHeightDp.times(0.87)
+    val maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.09)
+    val maxScreenHeight = LocalConfiguration.current.screenHeightDp.times(0.87)
 
     if (numberList.isNotEmpty()) {
         Box(modifier = Modifier.heightIn(0.dp, maxScreenHeight.dp)) {

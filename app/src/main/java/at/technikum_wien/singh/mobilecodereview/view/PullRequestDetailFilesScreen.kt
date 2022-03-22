@@ -19,7 +19,7 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
 fun PullRequestDetailFilesScreen(
-    navController: NavController?,
+    navController: NavController,
     viewModel: CodeReviewViewModel,
     repositoryItem: RepositoryItem?,
 ) {
@@ -39,7 +39,7 @@ fun PullRequestDetailFilesScreen(
                 Row() {
                     Column(modifier = Modifier
                         .widthIn(0.dp, maxScreenWidth.dp)
-                        .clickable { navController?.navigate(Screen.PullRequestDetailFilesDetailScreen.route + "/${file.sha}") }) {
+                        .clickable { navController.navigate(Screen.PullRequestDetailFilesDetailScreen.route + "/${file.sha}") }) {
                         Text(
                             text = file.filename,
                             color = MaterialTheme.colors.primary,

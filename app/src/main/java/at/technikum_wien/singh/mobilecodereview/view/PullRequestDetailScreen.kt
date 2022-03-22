@@ -17,7 +17,7 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
 fun PullRequestDetailScreen(
-    navController: NavController?,
+    navController: NavController,
     viewModel: CodeReviewViewModel,
     repositoryItem: RepositoryItem?,
 ) {
@@ -34,7 +34,7 @@ fun PullRequestDetailScreen(
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
-                text = "Created by ${viewModel.vscPullRequestDetail.value.user.login ?: ""}",
+                text = "Created by ${viewModel.vscPullRequestDetail.value.user.login}",
                 color = MaterialTheme.colors.primaryVariant,
                 style = MaterialTheme.typography.subtitle2
             )
@@ -51,7 +51,7 @@ fun PullRequestDetailScreen(
                 Spacer(modifier = Modifier.height(18.dp))
             }
             Box(modifier = Modifier.clickable
-            { navController?.navigate(Screen.PullRequestDetailFilesScreen.route + "/${repositoryItem?.id}") }) {
+            { navController.navigate(Screen.PullRequestDetailFilesScreen.route + "/${repositoryItem?.id}") }) {
                 if (viewModel.vscPullRequestDetail.value.changed_files != 1)
                     Text(
                         text = "${viewModel.vscPullRequestDetail.value.changed_files} files changed",
@@ -67,7 +67,7 @@ fun PullRequestDetailScreen(
             }
             Spacer(modifier = Modifier.height(24.dp))
             Box(modifier = Modifier.clickable
-            { navController?.navigate(Screen.PullRequestDetailCommitsScreen.route + "/${repositoryItem?.id}") }) {
+            { navController.navigate(Screen.PullRequestDetailCommitsScreen.route + "/${repositoryItem?.id}") }) {
                 if (viewModel.vscPullRequestDetail.value.commits != 1)
                     Text(
                         text = "${viewModel.vscPullRequestDetail.value.commits} commits",
@@ -95,24 +95,29 @@ fun PullRequestDetailScreen(
                 style = MaterialTheme.typography.h1
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "Comments",
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h1
-            )
-            Spacer(modifier = Modifier.height(4.dp))
-            Box(
-                modifier = Modifier
-                    .heightIn(0.dp, 150.dp)
-                    .padding(0.dp, 0.dp, 12.dp, 0.dp)
-            ) {
-                LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                    items(viewModel.vscPullRequestDetailComments) { comment ->
-                        PullRequestComments(viewModel = viewModel, comment = comment)
+            Box(modifier = Modifier.clickable {
+                navController.navigate(route = Screen.PullRequestDetailCommentsScreen.route)
+            }) {
+                Column {
+                    Text(
+                        text = "Comments",
+                        color = MaterialTheme.colors.primary,
+                        style = MaterialTheme.typography.h1
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Box(
+                        modifier = Modifier
+                            .heightIn(0.dp, 180.dp)
+                            .padding(0.dp, 0.dp, 12.dp, 0.dp)
+                    ) {
+                        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                            items(viewModel.vscPullRequestDetailComments) { comment ->
+                                PullRequestComments(viewModel = viewModel, comment = comment)
+                            }
+                        }
                     }
                 }
             }
-
 
         }
         Spacer(modifier = Modifier.width(12.dp))

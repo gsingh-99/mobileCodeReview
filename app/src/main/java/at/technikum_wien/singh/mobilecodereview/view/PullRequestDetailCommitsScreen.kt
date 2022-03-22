@@ -17,7 +17,7 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
 fun PullRequestDetailCommitsScreen(
-    navController: NavController?,
+    //navController: NavController,
     viewModel: CodeReviewViewModel,
     repositoryItem: RepositoryItem?,
 ) {

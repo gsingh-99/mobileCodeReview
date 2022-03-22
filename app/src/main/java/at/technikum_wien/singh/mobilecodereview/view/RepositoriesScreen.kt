@@ -17,7 +17,8 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
-fun RepositoriesScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
+fun RepositoriesScreen(//navController: NavController,
+                       viewModel: CodeReviewViewModel) {
     val isRefreshing by viewModel.isRefreshing.collectAsState()
     LaunchedEffect(Unit, block = {
         if (viewModel.refreshApiCalls.value) {

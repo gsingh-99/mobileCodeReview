@@ -22,7 +22,7 @@ import at.technikum_wien.singh.mobilecodereview.ui.theme.MobileCodeReviewTheme
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 
 @Composable
-fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
+fun MainScreen(navController: NavController, viewModel: CodeReviewViewModel) {
     viewModel.title.value = stringResource(R.string.home_home)
     viewModel.repositoryItems.observeAsState()
     Column() {
@@ -30,7 +30,7 @@ fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
-                .clickable { navController?.navigate(Screen.RepositoriesScreen.route) }
+                .clickable { navController.navigate(Screen.RepositoriesScreen.route) }
         ) {
             Icon(
                 painter = painterResource(R.drawable.outline_storage_24),
@@ -48,7 +48,7 @@ fun MainScreen(navController: NavController?, viewModel: CodeReviewViewModel) {
             .fillMaxWidth()
             .padding(12.dp)
             .clickable {
-                navController?.navigate(Screen.PullRequestScreen.route)
+                navController.navigate(Screen.PullRequestScreen.route)
             }) {
             Icon(
                 painter = painterResource(R.drawable.ic_pull_request),

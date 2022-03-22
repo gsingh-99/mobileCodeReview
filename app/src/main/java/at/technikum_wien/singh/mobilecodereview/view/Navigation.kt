@@ -60,7 +60,8 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     MainScreen(navController = navController, viewModel = viewModel)
                 }
                 composable(route = Screen.RepositoriesScreen.route) {
-                    RepositoriesScreen(navController = navController, viewModel = viewModel)
+                    RepositoriesScreen(//navController = navController,
+                        viewModel = viewModel)
                 }
                 composable(route = Screen.PullRequestScreen.route) {
                     PullRequestScreen(navController = navController, viewModel = viewModel)
@@ -71,15 +72,13 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                             type = NavType.StringType
                         }
                     )) {
-                    var repoItem: RepositoryItem? = null
-                    var pullRequestItem: VSCPullrequest? = null
                     val link = it.arguments?.getString("repositoryLink")
                     //link format item=##&number=##
                     val itemIndex =
                         link?.substring(link.lastIndexOf("item=") + 5, link.indexOf("&number="))
                     val numberIndex =
                         link?.substring(link.lastIndexOf("&number=") + 8)
-                    repoItem =
+                    val repoItem: RepositoryItem? =
                         viewModel.repositoryItems.value?.find { item -> item.id == itemIndex?.toLong() }
                     if (repoItem != null) {
                         if (viewModel.refreshApiCallsDetails.value) {
@@ -87,10 +86,6 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                                 "${repoItem.url}/pulls/$numberIndex",
                                 repoItem.token
                             )
-                            /*viewModel.getPullRequestComments(
-                                "${repoItem.url}/issues/$numberIndex/comments",
-                                repoItem.token
-                            )*/
                             viewModel.refreshApiCallsDetails.value = false
                         }
                         PullRequestDetailScreen(
@@ -108,11 +103,9 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         })
                 ) {
                     val index = it.arguments?.getLong("repositoryIndex")
-                    var repoItem: RepositoryItem? = null
-                    repoItem =
-                        viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    val repoItem: RepositoryItem? = viewModel.repositoryItems.value?.find { item -> item.id == index }
                     PullRequestDetailCommitsScreen(
-                        navController = navController,
+                       // navController = navController,
                         viewModel = viewModel,
                         repositoryItem = repoItem
                     )
@@ -125,9 +118,7 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         })
                 ) {
                     val index = it.arguments?.getLong("repositoryIndex")
-                    var repoItem: RepositoryItem? = null
-                    repoItem =
-                        viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    val repoItem: RepositoryItem? = viewModel.repositoryItems.value?.find { item -> item.id == index }
                     PullRequestDetailFilesScreen(
                         navController = navController,
                         viewModel = viewModel,
@@ -142,14 +133,18 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         })
                 ) {
                     val index = it.arguments?.getString("fileSha")
-                    var vscFile: VSCFile? = null
+                    val vscFile: VSCFile?
                     vscFile =
                         viewModel.vscPullRequestDetailFiles.find { item -> item.sha == index }
                     PullRequestDetailFilesDetailScreen(
-                        navController = navController,
+                       // navController = navController,
                         viewModel = viewModel,
                         file = vscFile
                     )
+
+                }
+                composable(route = Screen.PullRequestDetailCommentsScreen.route) {
+                    PullRequestDetailCommentsScreen(viewModel = viewModel)
                 }
             }
             GenericAlertDialog(viewModel = viewModel)
