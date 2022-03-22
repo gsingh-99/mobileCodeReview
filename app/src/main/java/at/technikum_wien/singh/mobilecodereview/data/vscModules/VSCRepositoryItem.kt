@@ -35,7 +35,8 @@ data class VSCPullrequest(
     val user: VSCUser,
     val head: VSCHead,
     val base: VSCBase,
-    val _links: VSCLinks
+    val _links: VSCLinks,
+    val comments: Int
 )
 
 data class VSCLinks(
@@ -51,8 +52,9 @@ data class VSCHref(
 )
 
 data class VSCUser(
-    val id: Int?,
-    val login: String?
+    val id: Int,
+    val login: String,
+    val avatar_url: String
 )
 
 data class VSCHead(
@@ -92,7 +94,8 @@ data class VSCCommits(
 
 data class VSCComment(
     val user: VSCUser,
-    val body: String
+    val body: String,
+    val updated_at: Date,
 )
 
 fun String.capitalized(): String {
@@ -148,6 +151,15 @@ interface APIService {
         @Url url: String,
         @Header("Authorization") authorization: String
     ): List<VSCFile>
+
+    @Headers(
+        "User-Agent: gsingh-99"
+    )
+    @GET
+    suspend fun getPullRequestComments(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): List<VSCComment>
 
     companion object {
         var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()

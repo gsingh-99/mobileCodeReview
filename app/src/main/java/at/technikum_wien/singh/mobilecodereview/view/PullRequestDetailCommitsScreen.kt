@@ -24,7 +24,7 @@ fun PullRequestDetailCommitsScreen(
     LaunchedEffect(Unit, block = {
         if (repositoryItem != null) {
             viewModel.getPullRequestCommits(
-                viewModel.VSCPullrequestDetail.value._links.commits.href,
+                viewModel.vscPullRequestDetail.value._links.commits.href,
                 repositoryItem.token
             )
         }
@@ -32,7 +32,7 @@ fun PullRequestDetailCommitsScreen(
     viewModel.title.value = "Commits"
     val maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.7)
     LazyColumn(Modifier.fillMaxWidth()) {
-        items(viewModel.VSCPullrequestDetailCommits) { commit ->
+        items(viewModel.vscPullRequestDetailCommits) { commit ->
             Box(Modifier.padding(8.dp)) {
                 Row() {
                     Column(modifier = Modifier.widthIn(0.dp, maxScreenWidth.dp)) {

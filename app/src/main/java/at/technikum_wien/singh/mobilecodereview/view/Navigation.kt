@@ -47,7 +47,7 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     )
                     if (navBackStackEntry?.destination?.route.equals("pullRequest_detail_screen/{repositoryLink}"))
                         Text(
-                            text = viewModel.VSCPullrequestDetail.value.head.repo.full_name ?: "",
+                            text = viewModel.vscPullRequestDetail.value.head.repo.full_name ?: "",
                             color = MaterialTheme.colors.secondary,
                             style = MaterialTheme.typography.subtitle1
                         )
@@ -82,10 +82,17 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     repoItem =
                         viewModel.repositoryItems.value?.find { item -> item.id == itemIndex?.toLong() }
                     if (repoItem != null) {
-                        viewModel.getPullRequest(
-                            repoItem.url + "/pulls/${numberIndex}",
-                            repoItem.token
-                        )
+                        if (viewModel.refreshApiCallsDetails.value) {
+                            viewModel.getPullRequest(
+                                "${repoItem.url}/pulls/$numberIndex",
+                                repoItem.token
+                            )
+                            /*viewModel.getPullRequestComments(
+                                "${repoItem.url}/issues/$numberIndex/comments",
+                                repoItem.token
+                            )*/
+                            viewModel.refreshApiCallsDetails.value = false
+                        }
                         PullRequestDetailScreen(
                             navController = navController,
                             viewModel = viewModel,
@@ -137,7 +144,7 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     val index = it.arguments?.getString("fileSha")
                     var vscFile: VSCFile? = null
                     vscFile =
-                        viewModel.VSCPullrequestDetailFiles.find { item -> item.sha == index }
+                        viewModel.vscPullRequestDetailFiles.find { item -> item.sha == index }
                     PullRequestDetailFilesDetailScreen(
                         navController = navController,
                         viewModel = viewModel,

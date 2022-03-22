@@ -11,7 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -19,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import at.technikum_wien.singh.mobilecodereview.R
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCPullrequest
-import at.technikum_wien.singh.mobilecodereview.data.vscModules.VSCRepositoryItem
 import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -28,7 +26,7 @@ import java.util.*
 @Composable
 fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewModel) {
     val isRefreshing by viewModel.isRefreshing.collectAsState()
-   // viewModel.refreshApiCallsDetails.value = true
+    // viewModel.refreshApiCallsDetails.value = true
     LaunchedEffect(Unit, block = {
         if (viewModel.refreshApiCalls.value) {
             viewModel.getPullRequestList()
@@ -43,7 +41,7 @@ fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewMod
         onRefresh = { viewModel.getPullRequestList() },
     ) {
         LazyColumn(Modifier.fillMaxWidth()) {
-            items(viewModel.VSCPullRequestList) { pullRequestItem ->
+            items(viewModel.vscPullRequestList) { pullRequestItem ->
                 PullRequestItemRow(
                     pullRequestItem = pullRequestItem,
                     viewModel = viewModel,
@@ -61,7 +59,10 @@ fun PullRequestItemRow(
     navController: NavController
 ) {
     Button(
-        onClick = { navController.navigate(Screen.PullRequestDetailScreen.route + "/url=${pullRequestItem.repoId}&number=${pullRequestItem.number}") },
+        onClick = {
+            viewModel.refreshApiCallsDetails.value = true
+            navController.navigate(Screen.PullRequestDetailScreen.route + "/url=${pullRequestItem.repoId}&number=${pullRequestItem.number}")
+        },
         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
     ) {
         Row(Modifier.fillMaxSize()) {

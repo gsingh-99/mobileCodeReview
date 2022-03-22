@@ -26,12 +26,18 @@ class CodeReviewViewModel(
     val refreshApiCalls = mutableStateOf(true)
     val refreshApiCallsDetails = mutableStateOf(true)
     val repositoryItems by lazy { repository.repositoryItems }
-    private val _githubRepositoryList = mutableStateListOf<VSCRepositoryItem>()
-    val VSCRepositoryItemList: List<VSCRepositoryItem>
-        get() = _githubRepositoryList
+
+    //RepositoryList
+    private val _repositoryList = mutableStateListOf<VSCRepositoryItem>()
+    val vscRepositoryItemList: List<VSCRepositoryItem>
+        get() = _repositoryList
+
+    //PullRequestList
     private val _pullRequestList = mutableStateListOf<VSCPullrequest>()
-    val VSCPullRequestList: List<VSCPullrequest>
+    val vscPullRequestList: List<VSCPullrequest>
         get() = _pullRequestList
+
+    //Pull Request
     private val _pullRequestDetail = mutableStateOf(
         VSCPullrequest(
             1L,
@@ -44,22 +50,34 @@ class CodeReviewViewModel(
             "",
             1,
             1,
-            VSCUser(1, ""),
-            VSCHead(VSCUser(1, ""), VSCRepositoryItem(1, "", "", Date(), "", VSCUser(1, "")), ""),
+            VSCUser(1, "", ""),
+            VSCHead(
+                VSCUser(1, "", ""),
+                VSCRepositoryItem(1, "", "", Date(), "", VSCUser(1, "", "")),
+                ""
+            ),
             VSCBase(""),
-            VSCLinks(VSCHref(""), VSCHref(""), VSCHref(""), VSCHref(""), VSCHref(""))
+            VSCLinks(VSCHref(""), VSCHref(""), VSCHref(""), VSCHref(""), VSCHref("")), 0
         )
     )
-    val VSCPullrequestDetail: MutableState<VSCPullrequest>
+    val vscPullRequestDetail: MutableState<VSCPullrequest>
         get() = _pullRequestDetail
 
+    //COMMITS
     private val _pullRequestDetailCommits = mutableStateListOf<VSCCommits>()
-    val VSCPullrequestDetailCommits: List<VSCCommits>
+    val vscPullRequestDetailCommits: List<VSCCommits>
         get() = _pullRequestDetailCommits
 
+    //FILES
     private val _pullRequestDetailFiles = mutableStateListOf<VSCFile>()
-    val VSCPullrequestDetailFiles: List<VSCFile>
+    val vscPullRequestDetailFiles: List<VSCFile>
         get() = _pullRequestDetailFiles
+
+    //COMMENTS
+    private val _pullRequestDetailComments = mutableStateListOf<VSCComment>()
+    val vscPullRequestDetailComments: List<VSCComment>
+        get() = _pullRequestDetailComments
+
     var errorMessage: String by mutableStateOf("")
 
     private val TAG = "ViewModel"
@@ -84,10 +102,10 @@ class CodeReviewViewModel(
     fun getGithubList() {
         viewModelScope.launch {
             val apiService = APIService.getInstance()
-            _githubRepositoryList.clear()
+            _repositoryList.clear()
             repositoryItems.value?.forEach {
                 try {
-                    _githubRepositoryList.add(
+                    _repositoryList.add(
                         apiService.getRepository(
                             it.url,
                             " token " + it.token
@@ -136,6 +154,25 @@ class CodeReviewViewModel(
                         url,
                         " token $token"
                     )
+                _pullRequestDetailComments.clear()
+                if (_pullRequestDetail.value.comments > 0) {
+                    val issueUrl = _pullRequestDetail.value._links.issue.href
+                    getPullRequestComments("$issueUrl/comments", token)
+                }
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
+
+    private fun getPullRequestComments(url: String, token: String) {
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
+            try {
+                _pullRequestDetailComments.clear()
+                _pullRequestDetailComments.addAll(
+                    apiService.getPullRequestComments(url, " token $token")
+                )
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }

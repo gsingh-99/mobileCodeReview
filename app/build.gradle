@@ -68,6 +68,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:0.24.4-alpha"
     implementation 'androidx.activity:activity-compose:1.4.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.9.3'
+    implementation("io.coil-kt:coil-compose:2.0.0-rc02")
     kapt "androidx.room:room-compiler:2.3.0"
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'

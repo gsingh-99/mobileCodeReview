@@ -26,7 +26,7 @@ fun PullRequestDetailFilesScreen(
     LaunchedEffect(Unit, block = {
         if (repositoryItem != null) {
             viewModel.getPullRequestFiles(
-                "${viewModel.VSCPullrequestDetail.value._links.self.href}/files",
+                "${viewModel.vscPullRequestDetail.value._links.self.href}/files",
                 repositoryItem.token
             )
         }
@@ -34,7 +34,7 @@ fun PullRequestDetailFilesScreen(
     viewModel.title.value = "Files"
     val maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.7)
     LazyColumn(Modifier.fillMaxWidth()) {
-        items(viewModel.VSCPullrequestDetailFiles) { file ->
+        items(viewModel.vscPullRequestDetailFiles) { file ->
             Box(Modifier.padding(8.dp)) {
                 Row() {
                     Column(modifier = Modifier
