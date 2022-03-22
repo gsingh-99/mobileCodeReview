@@ -23,46 +23,50 @@ fun PullRequestDetailFilesDetailScreen(
     viewModel: CodeReviewViewModel,
     file: VSCFile?,
 ) {
-    viewModel.title.value = file?.filename ?: "This file is too large to preview."
+    viewModel.title.value = file?.filename ?: ""
     val stringList = viewModel.breakLineToArray(file?.patch ?: "")
     val numberList = viewModel.breakLineNumbersToArray(stringList)
     var maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.09)
     var maxScreenHeight = LocalConfiguration.current.screenHeightDp.times(0.87)
 
-    Box(modifier = Modifier.heightIn(0.dp, maxScreenHeight.dp)) {
-    LazyColumn(Modifier.fillMaxWidth()) {
-        itemsIndexed(stringList) { index, text ->
-            Row(
-                verticalAlignment = Alignment.Top,
-                modifier = Modifier.background(viewModel.patchTextColor(text))
-            ) {
-                Column(
-                    Modifier
-                        .widthIn(maxScreenWidth.dp, maxScreenWidth.dp)
-                ) {
-                    Text(
-                        text = numberList[index],
-                        color = Black,
-                        textAlign = TextAlign.Right,
-                        style = MaterialTheme.typography.h6,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                }
-                Column(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(viewModel.patchTextColorLighter(text))
-                ) {
-                    Text(
-                        text = text,
-                        color = Black,
-                        style = MaterialTheme.typography.h6
-                    )
+    if (numberList.isNotEmpty()) {
+        Box(modifier = Modifier.heightIn(0.dp, maxScreenHeight.dp)) {
+            LazyColumn(Modifier.fillMaxWidth()) {
+                itemsIndexed(stringList) { index, text ->
+                    Row(
+                        verticalAlignment = Alignment.Top,
+                        modifier = Modifier.background(viewModel.patchTextColor(text))
+                    ) {
+                        Column(
+                            Modifier
+                                .widthIn(maxScreenWidth.dp, maxScreenWidth.dp)
+                        ) {
+                            Text(
+                                text = numberList[index],
+                                color = Black,
+                                textAlign = TextAlign.Right,
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                        Column(
+                            Modifier
+                                .fillMaxWidth()
+                                .background(viewModel.patchTextColorLighter(text))
+                        ) {
+                            Text(
+                                text = text,
+                                color = Black,
+                                style = MaterialTheme.typography.h6
+                            )
+                        }
+                    }
                 }
             }
         }
-    }}
-    //Text(text = file?.patch ?: "")
+    } else {
+        Text(text = "This file is too large to preview.")
+    }
 }
 
 /*@Preview

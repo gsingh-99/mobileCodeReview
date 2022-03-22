@@ -197,7 +197,7 @@ class CodeReviewViewModel(
         var stringList = mutableListOf<String>()
         while (text.contains("\n")) {
             stringList.add(text.substring(0, text.indexOf("\n")))
-            text = text.replace(text.substring(0, text.indexOf("\n") + 1), "")
+            text = text.replaceFirst(text.substring(0, text.indexOf("\n") + 1), "")
         }
         stringList.add(text)
         return stringList
@@ -207,33 +207,34 @@ class CodeReviewViewModel(
         var minusIndex = 0
         var plusIndex = 0
         var stringList = mutableListOf<String>()
-        textList.forEach {
-            if (it.startsWith("@@")) {
-                minusIndex =
-                    it.substring((it.indexOf("@@ -") + 4), it.indexOf(",")).toInt()
-                if (it.substring(it.indexOf("+") + 1, it.length).contains(",")) {
-                    plusIndex =
-                        it.substring(it.indexOf("+") + 1, it.lastIndexOf(",")).toInt()
-                } else {
-                    plusIndex =
-                        it.substring(it.indexOf("+") + 1, it.length - 3).toInt()
+        if (textList.size > 1)
+            textList.forEach {
+                if (it.startsWith("@@")) {
+                    minusIndex =
+                        it.substring((it.indexOf("@@ -") + 4), it.indexOf(",")).toInt()
+                    if (it.substring(it.indexOf("+") + 1, it.length).contains(",")) {
+                        plusIndex =
+                            it.substring(it.indexOf("+") + 1, it.lastIndexOf(",")).toInt()
+                    } else {
+                        plusIndex =
+                            it.substring(it.indexOf("+") + 1, it.length - 3).toInt()
+                    }
                     stringList.add("")
-                }
-            } else {
-                if (it.startsWith("+")) {
-                    stringList.add("$plusIndex")
-                    plusIndex++
-                } else if (it.startsWith("-")) {
-                    stringList.add("$minusIndex")
-                    minusIndex++
                 } else {
-                    stringList.add("$minusIndex")
-                    plusIndex++
-                    minusIndex++
-                }
+                    if (it.startsWith("+")) {
+                        stringList.add("$plusIndex")
+                        plusIndex++
+                    } else if (it.startsWith("-")) {
+                        stringList.add("$minusIndex")
+                        minusIndex++
+                    } else {
+                        stringList.add("$minusIndex")
+                        plusIndex++
+                        minusIndex++
+                    }
 
+                }
             }
-        }
         return stringList
     }
 
