@@ -78,19 +78,41 @@ class CodeReviewViewModel(
     val vscPullRequestDetailComments: List<VSCComment>
         get() = _pullRequestDetailComments
 
+    //Reviews
+    private val _pullRequestDetailReviews = mutableStateListOf<VSCReview>()
+    val vscPullRequestDetailReviews: List<VSCReview>
+        get() = _pullRequestDetailReviews
+
     var errorMessage: String by mutableStateOf("")
+
+    // Add new Repository
+    val openAddNewRepositoryDialog = mutableStateOf(false)
+    var tfAddRepositoryUrl: String by mutableStateOf("")
+    var tfAddRepositoryToken: String by mutableStateOf("")
 
     private val TAG = "ViewModel"
 
+    fun urlParser(url: String): String {
+        var parsedUrl = ""
+        if (url.startsWith("https://github.com/")) {
+            parsedUrl =
+                "https://api.github.com/repos/${url.replaceFirst("https://github.com/", "")}"
+        }
+        return parsedUrl
+    }
+
     fun addRepository() {
-        application.onTerminate()
+        tfAddRepositoryUrl = urlParser(tfAddRepositoryUrl)
         val repositoryItem = RepositoryItem(
-            "https://api.github.com/repos/gsingh-99/XSS-injection",
-            "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"
+            tfAddRepositoryUrl,
+            tfAddRepositoryToken
         )
+        tfAddRepositoryUrl = ""
+        tfAddRepositoryToken = ""
         viewModelScope.launch {
             repository.insert(repositoryItem)
         }
+        openAddNewRepositoryDialog.value = false
     }
 
     init {
@@ -213,6 +235,24 @@ class CodeReviewViewModel(
         }
     }
 
+    fun getPullRequestReviews(url: String, token: String) {
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
+            try {
+                _pullRequestDetailReviews.clear()
+                _pullRequestDetailReviews.addAll(
+                    apiService.getPullRequestReviews(url, " token $token")
+                )
+                _pullRequestDetailReviews.forEach {
+                    if (it.state == "PENDING")
+                        _pullRequestDetailReviews.remove(it)
+                }
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
+
     fun calcUpdateDuration(date: Date): String {
         val current = Date()
         val diff = current.time - date.time
@@ -307,6 +347,39 @@ class CodeReviewViewModel(
         return White
     }
 
+    fun parseReviewStateText(reviewState: String): String {
+        return when (reviewState) {
+            "COMMENTED" -> {
+                "commented"
+            }
+            "APPROVED" -> {
+                "approved"
+            }
+            "CHANGES_REQUESTED" -> {
+                "requested changes"
+            }
+            else -> {
+                reviewState
+            }
+        }
+    }
+
+    fun parseReviewStateColor(reviewState: String): Color {
+        return when (reviewState) {
+            "COMMENTED" -> {
+                BabyBlue
+            }
+            "APPROVED" -> {
+                ApproveGreen
+            }
+            "CHANGES_REQUESTED" -> {
+                DisapproveRed
+            }
+            else -> {
+                Color.Black
+            }
+        }
+    }
 }
 
 class CodeReviewViewModelFactory(

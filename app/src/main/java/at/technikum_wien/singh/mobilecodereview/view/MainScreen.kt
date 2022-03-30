@@ -66,7 +66,7 @@ fun MainScreen(navController: NavController, viewModel: CodeReviewViewModel) {
         Spacer(modifier = Modifier.weight(1f))
         Row {
             Spacer(modifier = Modifier.weight(1f))
-            FloatingActionButton(onClick = { viewModel.addRepository() }) {
+            FloatingActionButton(onClick = { viewModel.openAddNewRepositoryDialog.value = true }) {
                 Icon(
                     Icons.Filled.Add,
                     contentDescription = stringResource(R.string.home_add_repository_FAB),
@@ -78,13 +78,17 @@ fun MainScreen(navController: NavController, viewModel: CodeReviewViewModel) {
         }
         Spacer(modifier = Modifier.weight(0.08f))
     }
+    if (viewModel.openAddNewRepositoryDialog.value)
+        AddRepositoryDialog(viewModel = viewModel)
 
 }
-/*
+
 @Preview(showBackground = true)
 @Composable
 fun MainScreenPreview() {
     MobileCodeReviewTheme {
-        //   MainScreen(null)
+        Row {
+            Text(text = "test")
+        }
     }
-}*/
+}

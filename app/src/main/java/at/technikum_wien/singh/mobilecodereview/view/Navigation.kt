@@ -61,7 +61,8 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 }
                 composable(route = Screen.RepositoriesScreen.route) {
                     RepositoriesScreen(//navController = navController,
-                        viewModel = viewModel)
+                        viewModel = viewModel
+                    )
                 }
                 composable(route = Screen.PullRequestScreen.route) {
                     PullRequestScreen(navController = navController, viewModel = viewModel)
@@ -103,9 +104,10 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         })
                 ) {
                     val index = it.arguments?.getLong("repositoryIndex")
-                    val repoItem: RepositoryItem? = viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    val repoItem: RepositoryItem? =
+                        viewModel.repositoryItems.value?.find { item -> item.id == index }
                     PullRequestDetailCommitsScreen(
-                       // navController = navController,
+                        // navController = navController,
                         viewModel = viewModel,
                         repositoryItem = repoItem
                     )
@@ -118,7 +120,8 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         })
                 ) {
                     val index = it.arguments?.getLong("repositoryIndex")
-                    val repoItem: RepositoryItem? = viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    val repoItem: RepositoryItem? =
+                        viewModel.repositoryItems.value?.find { item -> item.id == index }
                     PullRequestDetailFilesScreen(
                         navController = navController,
                         viewModel = viewModel,
@@ -133,11 +136,10 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         })
                 ) {
                     val index = it.arguments?.getString("fileSha")
-                    val vscFile: VSCFile?
-                    vscFile =
+                    val vscFile =
                         viewModel.vscPullRequestDetailFiles.find { item -> item.sha == index }
                     PullRequestDetailFilesDetailScreen(
-                       // navController = navController,
+                        // navController = navController,
                         viewModel = viewModel,
                         file = vscFile
                     )
@@ -145,6 +147,22 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 }
                 composable(route = Screen.PullRequestDetailCommentsScreen.route) {
                     PullRequestDetailCommentsScreen(viewModel = viewModel)
+                }
+                composable(
+                    route = Screen.PullRequestDetailReviewsScreen.route + "/{repositoryIndex}",
+                    arguments = listOf(
+                        navArgument(name = "repositoryIndex") {
+                            type = NavType.LongType
+                        })
+                ) {
+                    val index = it.arguments?.getLong("repositoryIndex")
+                    val repoItem: RepositoryItem? =
+                        viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    PullRequestDetailReviewScreen(
+                        navController = navController,
+                        viewModel = viewModel,
+                        repositoryItem = repoItem
+                    )
                 }
             }
             GenericAlertDialog(viewModel = viewModel)

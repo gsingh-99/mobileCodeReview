@@ -89,11 +89,17 @@ fun PullRequestDetailScreen(
                 style = MaterialTheme.typography.h1
             )
             Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "Reviews",
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h1
-            )
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .clickable {
+                    navController.navigate(route = Screen.PullRequestDetailReviewsScreen.route + "/${repositoryItem?.id}")
+                }) {
+                Text(
+                    text = "Reviews",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h1
+                )
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Box(modifier = Modifier.clickable {
                 navController.navigate(route = Screen.PullRequestDetailCommentsScreen.route)

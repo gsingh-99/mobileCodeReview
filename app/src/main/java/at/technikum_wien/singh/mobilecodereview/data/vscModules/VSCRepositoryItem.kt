@@ -63,6 +63,13 @@ data class VSCHead(
     val ref: String
 )
 
+data class VSCReview(
+    val user: VSCUser,
+    val body: String,
+    val state: String,
+    val submitted_at: Date?
+)
+
 data class VSCBase(
     val ref: String
 )
@@ -160,6 +167,12 @@ interface APIService {
         @Url url: String,
         @Header("Authorization") authorization: String
     ): List<VSCComment>
+
+    @GET
+    suspend fun getPullRequestReviews(
+        @Url url: String,
+        @Header("Authorization") authorization: String
+    ): List<VSCReview>
 
     companion object {
         var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
