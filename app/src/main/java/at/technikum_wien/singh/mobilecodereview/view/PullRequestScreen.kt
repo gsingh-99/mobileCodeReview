@@ -35,18 +35,21 @@ fun PullRequestScreen(navController: NavController, viewModel: CodeReviewViewMod
         }
     })
     viewModel.title.value = stringResource(R.string.home_pull_request)
-    Text(text = viewModel.errorMessage)
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing),
-        onRefresh = { viewModel.getPullRequestList() },
-    ) {
-        LazyColumn(Modifier.fillMaxWidth()) {
-            items(viewModel.vscPullRequestList) { pullRequestItem ->
-                PullRequestItemRow(
-                    pullRequestItem = pullRequestItem,
-                    viewModel = viewModel,
-                    navController = navController
-                )
+    Column {
+        if (viewModel.errorMessage.isNotEmpty())
+            Text(text = viewModel.errorMessage)
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = { viewModel.getPullRequestList() },
+        ) {
+            LazyColumn(Modifier.fillMaxWidth()) {
+                items(viewModel.vscPullRequestList) { pullRequestItem ->
+                    PullRequestItemRow(
+                        pullRequestItem = pullRequestItem,
+                        viewModel = viewModel,
+                        navController = navController
+                    )
+                }
             }
         }
     }

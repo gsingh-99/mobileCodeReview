@@ -12,6 +12,7 @@ import at.technikum_wien.singh.mobilecodereview.data.vscModules.*
 import at.technikum_wien.singh.mobilecodereview.ui.theme.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
+import retrofit2.awaitResponse
 import java.util.*
 
 class CodeReviewViewModel(
@@ -247,6 +248,36 @@ class CodeReviewViewModel(
                     if (it.state == "PENDING")
                         _pullRequestDetailReviews.remove(it)
                 }
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
+
+    fun createPullRequestReview(url: String, token: String, body: String, event: String) {
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
+            try {
+                val review = VSCWriteReview(body, event)
+                val code =
+                    apiService.createPullRequestReview(url, " token $token", review)
+                        .code()
+                if (code == 422) {
+                    // if the user has a pending request search the id and overwrite it with the given body and event type
+                    val user = apiService.getUser("https://api.github.com/user", " token $token")
+                    val reviews = apiService.getPullRequestReviews(url, " token $token")
+                    for (reviewItem in reviews) {
+                        if (reviewItem.state == "PENDING" && reviewItem.user.id == user.id) {
+                            apiService.createPullRequestReview(
+                                url + "/${reviewItem.id}/events",
+                                " token $token",
+                                review
+                            )
+                            break
+                        }
+                    }
+                }
+
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }

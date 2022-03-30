@@ -48,8 +48,6 @@ fun PullRequestDetailReviewScreen(
         items(viewModel.vscPullRequestDetailReviews) { review ->
             Box(Modifier.padding(6.dp, 6.dp)) {
                 Column {
-
-
                     Row {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)

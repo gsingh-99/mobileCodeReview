@@ -27,7 +27,7 @@ fun PullRequestDetailFilesDetailScreen(
     val stringList = viewModel.breakLineToArray(file?.patch ?: "")
     val numberList = viewModel.breakLineNumbersToArray(stringList)
     val maxScreenWidth = LocalConfiguration.current.screenWidthDp.times(0.09)
-    val maxScreenHeight = LocalConfiguration.current.screenHeightDp.times(0.87)
+    val maxScreenHeight = LocalConfiguration.current.screenHeightDp.times(0.85)
 
     if (numberList.isNotEmpty()) {
         Box(modifier = Modifier.heightIn(0.dp, maxScreenHeight.dp)) {

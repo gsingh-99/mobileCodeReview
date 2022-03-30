@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -25,58 +26,58 @@ import at.technikum_wien.singh.mobilecodereview.viewmodel.CodeReviewViewModel
 fun MainScreen(navController: NavController, viewModel: CodeReviewViewModel) {
     viewModel.title.value = stringResource(R.string.home_home)
     viewModel.repositoryItems.observeAsState()
-    Column() {
-        Row(
-            modifier = Modifier
+    Box(Modifier.fillMaxHeight()) {
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
+                    .clickable { navController.navigate(Screen.RepositoriesScreen.route) }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.outline_storage_24),
+                    contentDescription = "Repository"
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = stringResource(R.string.home_repository),
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.button
+                )
+                Spacer(modifier = Modifier.weight(1f))
+            }
+            Row(modifier = Modifier
                 .fillMaxWidth()
                 .padding(12.dp)
-                .clickable { navController.navigate(Screen.RepositoriesScreen.route) }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.outline_storage_24),
-                contentDescription = "Repository"
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = stringResource(R.string.home_repository),
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.button
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp)
-            .clickable {
-                navController.navigate(Screen.PullRequestScreen.route)
-            }) {
-            Icon(
-                painter = painterResource(R.drawable.ic_pull_request),
-                modifier = Modifier.size(24.dp),
-                contentDescription = "Repository"
-            )
-            Spacer(modifier = Modifier.width(12.dp))
-            Text(
-                text = stringResource(R.string.home_pull_request),
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.button
-            )
-            Spacer(modifier = Modifier.weight(1f))
-        }
-        Spacer(modifier = Modifier.weight(1f))
-        Row {
-            Spacer(modifier = Modifier.weight(1f))
-            FloatingActionButton(onClick = { viewModel.openAddNewRepositoryDialog.value = true }) {
+                .clickable {
+                    navController.navigate(Screen.PullRequestScreen.route)
+                }) {
                 Icon(
-                    Icons.Filled.Add,
-                    contentDescription = stringResource(R.string.home_add_repository_FAB),
-                    modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colors.primary
+                    painter = painterResource(R.drawable.ic_pull_request),
+                    modifier = Modifier.size(24.dp),
+                    contentDescription = "Repository"
                 )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text(
+                    text = stringResource(R.string.home_pull_request),
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.button
+                )
+                Spacer(modifier = Modifier.weight(1f))
             }
-            Spacer(modifier = Modifier.weight(0.045f))
         }
-        Spacer(modifier = Modifier.weight(0.08f))
+        FloatingActionButton(
+            modifier = Modifier
+                .align(Alignment.BottomEnd)
+                .padding(12.dp, 35.dp),
+            onClick = { viewModel.openAddNewRepositoryDialog.value = true }) {
+            Icon(
+                Icons.Filled.Add,
+                contentDescription = stringResource(R.string.home_add_repository_FAB),
+                modifier = Modifier.size(32.dp),
+                tint = MaterialTheme.colors.primary
+            )
+        }
     }
     if (viewModel.openAddNewRepositoryDialog.value)
         AddRepositoryDialog(viewModel = viewModel)

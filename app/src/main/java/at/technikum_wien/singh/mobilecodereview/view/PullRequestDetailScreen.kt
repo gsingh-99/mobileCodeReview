@@ -124,7 +124,6 @@ fun PullRequestDetailScreen(
                     }
                 }
             }
-
         }
         Spacer(modifier = Modifier.width(12.dp))
 
