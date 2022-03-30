@@ -83,6 +83,9 @@ class CodeReviewViewModel(
     private val _pullRequestDetailReviews = mutableStateListOf<VSCReview>()
     val vscPullRequestDetailReviews: List<VSCReview>
         get() = _pullRequestDetailReviews
+    val openAddNewReviewDialog = mutableStateOf(false)
+    var tfAddReviewText: String by mutableStateOf("")
+
 
     var errorMessage: String by mutableStateOf("")
 

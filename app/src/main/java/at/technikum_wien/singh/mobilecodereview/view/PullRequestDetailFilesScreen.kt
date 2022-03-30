@@ -66,7 +66,7 @@ fun PullRequestDetailFilesScreen(
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(8.dp),
-                onClick = { viewModel.openAddNewRepositoryDialog.value = true },
+                onClick = { viewModel.openAddNewReviewDialog.value = true },
                 backgroundColor = MaterialTheme.colors.primary,
                 text = {
                     Text(
@@ -78,4 +78,6 @@ fun PullRequestDetailFilesScreen(
             )
         }
     }
+    if (viewModel.openAddNewReviewDialog.value)
+        AddReviewDialog(viewModel = viewModel)
 }

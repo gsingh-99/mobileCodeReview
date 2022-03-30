@@ -23,7 +23,7 @@ fun AddRepositoryDialog(viewModel: CodeReviewViewModel) {
         title = { Text(text = "Add new repository...") },
         text = {
             Column {
-                TextField(
+                OutlinedTextField(
                     value = viewModel.tfAddRepositoryUrl,
                     onValueChange = { viewModel.tfAddRepositoryUrl = it },
                     label = {
@@ -35,7 +35,7 @@ fun AddRepositoryDialog(viewModel: CodeReviewViewModel) {
                     placeholder = { Text(text = "Repository URL", color = Color.LightGray) },
                     singleLine = true
                 )
-                TextField(
+                OutlinedTextField(
                     value = viewModel.tfAddRepositoryToken,
                     onValueChange = { viewModel.tfAddRepositoryToken = it },
                     label = { Text(text = "Token", color = MaterialTheme.colors.primary) },
