@@ -85,7 +85,12 @@ class CodeReviewViewModel(
         get() = _pullRequestDetailReviews
     val openAddNewReviewDialog = mutableStateOf(false)
     var tfAddReviewText: String by mutableStateOf("")
-
+    val reviewRadioButtonOptions = mapOf(
+        "APPROVE" to "Approve",
+        "COMMENT" to "Comment",
+        "REQUEST_CHANGES" to "Request changes"
+    )
+    var reviewSelectedType = mutableStateOf("APPROVE")
 
     var errorMessage: String by mutableStateOf("")
 
@@ -257,11 +262,11 @@ class CodeReviewViewModel(
         }
     }
 
-    fun createPullRequestReview(url: String, token: String, body: String, event: String) {
+    fun createPullRequestReview(url: String, token: String) {
         viewModelScope.launch {
             val apiService = APIService.getInstance()
             try {
-                val review = VSCWriteReview(body, event)
+                val review = VSCWriteReview(tfAddReviewText, reviewSelectedType.value)
                 val code =
                     apiService.createPullRequestReview(url, " token $token", review)
                         .code()
@@ -280,7 +285,8 @@ class CodeReviewViewModel(
                         }
                     }
                 }
-
+                tfAddReviewText = ""
+                reviewSelectedType.value = "APPROVE"
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }

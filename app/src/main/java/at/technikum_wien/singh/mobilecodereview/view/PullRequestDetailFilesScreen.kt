@@ -79,5 +79,5 @@ fun PullRequestDetailFilesScreen(
         }
     }
     if (viewModel.openAddNewReviewDialog.value)
-        AddReviewDialog(viewModel = viewModel)
+        AddReviewDialog(viewModel = viewModel, repositoryItem = repositoryItem)
 }
