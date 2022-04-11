@@ -23,7 +23,7 @@ fun PullRequestDetailCommentsScreen(viewModel: CodeReviewViewModel) {
                 text = "No comments found...",
                 color = Black,
                 textAlign = TextAlign.Right,
-                style = MaterialTheme.typography.h1,
+                style = MaterialTheme.typography.h5,
             )
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
             items(viewModel.vscPullRequestDetailComments) { comment ->

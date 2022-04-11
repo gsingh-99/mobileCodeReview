@@ -30,13 +30,13 @@ fun PullRequestDetailScreen(
             Text(
                 text = "Status (${viewModel.vscPullRequestDetail.value.state?.capitalized() ?: ""}) ${viewModel.vscPullRequestDetail.value.head.ref} -> ${viewModel.vscPullRequestDetail.value.base.ref}",
                 color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.subtitle2
+                style = MaterialTheme.typography.subtitle1
             )
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = "Created by ${viewModel.vscPullRequestDetail.value.user.login}",
                 color = MaterialTheme.colors.primaryVariant,
-                style = MaterialTheme.typography.subtitle2
+                style = MaterialTheme.typography.subtitle1
             )
             if (viewModel.vscPullRequestDetail.value.body != null) {
 
@@ -44,7 +44,7 @@ fun PullRequestDetailScreen(
                 Text(
                     text = viewModel.vscPullRequestDetail.value.body ?: "",
                     color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.subtitle1
+                    style = MaterialTheme.typography.subtitle2
                 )
                 Spacer(modifier = Modifier.height(24.dp))
             } else {
@@ -56,13 +56,13 @@ fun PullRequestDetailScreen(
                     Text(
                         text = "${viewModel.vscPullRequestDetail.value.changed_files} files changed",
                         color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h1
+                        style = MaterialTheme.typography.h5
                     )
                 else
                     Text(
                         text = "${viewModel.vscPullRequestDetail.value.changed_files} file changed",
                         color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h1
+                        style = MaterialTheme.typography.h5
                     )
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -72,21 +72,21 @@ fun PullRequestDetailScreen(
                     Text(
                         text = "${viewModel.vscPullRequestDetail.value.commits} commits",
                         color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h1
+                        style = MaterialTheme.typography.h5
 
                     )
                 else
                     Text(
                         text = "${viewModel.vscPullRequestDetail.value.commits} commit",
                         color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h1
+                        style = MaterialTheme.typography.h5
                     )
             }
             Spacer(modifier = Modifier.height(24.dp))
             Text(
                 text = "Static code analysis",
                 color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h1
+                style = MaterialTheme.typography.h5
             )
             Spacer(modifier = Modifier.height(24.dp))
             Box(modifier = Modifier
@@ -97,7 +97,7 @@ fun PullRequestDetailScreen(
                 Text(
                     text = "Reviews",
                     color = MaterialTheme.colors.primary,
-                    style = MaterialTheme.typography.h1
+                    style = MaterialTheme.typography.h5
                 )
             }
             Spacer(modifier = Modifier.height(24.dp))
@@ -108,7 +108,7 @@ fun PullRequestDetailScreen(
                     Text(
                         text = "Comments",
                         color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h1
+                        style = MaterialTheme.typography.h5
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Box(

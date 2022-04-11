@@ -77,7 +77,7 @@ fun PullRequestItemRow(
                         Text(
                             text = pullRequestItem.head.repo.full_name ?: "",
                             color = MaterialTheme.colors.primaryVariant,
-                            style = MaterialTheme.typography.subtitle1
+                            style = MaterialTheme.typography.subtitle2
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         Text(
@@ -85,13 +85,13 @@ fun PullRequestItemRow(
                                 pullRequestItem.updated_at ?: Date()
                             ),
                             color = MaterialTheme.colors.primaryVariant,
-                            style = MaterialTheme.typography.subtitle1
+                            style = MaterialTheme.typography.subtitle2
                         )
                     }
                     Text(
                         text = pullRequestItem.title ?: "",
                         color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h1
+                        style = MaterialTheme.typography.h5
                     )
                 }
             }

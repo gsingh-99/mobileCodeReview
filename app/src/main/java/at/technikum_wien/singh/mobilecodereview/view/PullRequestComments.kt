@@ -48,13 +48,13 @@ fun PullRequestComments(viewModel: CodeReviewViewModel, comment: VSCComment) {
                 Text(
                     text = " ${comment.user.login}: ",
                     color = Color.Black,
-                    style = MaterialTheme.typography.subtitle2
+                    style = MaterialTheme.typography.subtitle1
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = viewModel.calcUpdateDuration(comment.updated_at),
                     color = MaterialTheme.colors.primaryVariant,
-                    style = MaterialTheme.typography.subtitle1
+                    style = MaterialTheme.typography.subtitle2
                 )
             }
             Row(Modifier.padding(0.dp,0.dp)) {

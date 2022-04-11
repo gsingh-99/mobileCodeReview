@@ -64,19 +64,19 @@ fun PullRequestDetailReviewScreen(
                         Text(
                             text = " ${review.user.login} ",
                             color = Color.Black,
-                            style = MaterialTheme.typography.subtitle2
+                            style = MaterialTheme.typography.subtitle1
                         )
                         Text(
                             text = viewModel.parseReviewStateText(review.state),
                             color = viewModel.parseReviewStateColor(review.state),
-                            style = MaterialTheme.typography.subtitle2
+                            style = MaterialTheme.typography.subtitle1
                         )
                         Spacer(modifier = Modifier.weight(1f))
                         if (review.submitted_at != null)
                             Text(
                                 text = viewModel.calcUpdateDuration(review.submitted_at),
                                 color = MaterialTheme.colors.primaryVariant,
-                                style = MaterialTheme.typography.subtitle1
+                                style = MaterialTheme.typography.subtitle2
                             )
                     }
                     Row(Modifier.padding(0.dp, 0.dp)) {

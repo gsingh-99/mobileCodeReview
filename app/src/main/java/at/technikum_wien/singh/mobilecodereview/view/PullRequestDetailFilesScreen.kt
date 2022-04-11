@@ -50,7 +50,7 @@ fun PullRequestDetailFilesScreen(
                                 Text(
                                     text = file.filename,
                                     color = MaterialTheme.colors.primary,
-                                    style = MaterialTheme.typography.h1,
+                                    style = MaterialTheme.typography.h5,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -71,7 +71,7 @@ fun PullRequestDetailFilesScreen(
                 text = {
                     Text(
                         text = "Write a review",
-                        style = MaterialTheme.typography.subtitle2,
+                        style = MaterialTheme.typography.subtitle1,
                         color = MaterialTheme.colors.secondary,
                     )
                 }

@@ -46,7 +46,7 @@ fun AddReviewDialog(viewModel: CodeReviewViewModel, repositoryItem: RepositoryIt
             ) {
                 Text(
                     text = "Add new review...",
-                    style = MaterialTheme.typography.h1
+                    style = MaterialTheme.typography.h5
                 )
                 OutlinedTextField(
                     value = viewModel.tfAddReviewText,
@@ -80,7 +80,7 @@ fun AddReviewDialog(viewModel: CodeReviewViewModel, repositoryItem: RepositoryIt
                 ) {
                     Text(
                         text = "Confirm",
-                        style = MaterialTheme.typography.subtitle1,
+                        style = MaterialTheme.typography.subtitle2,
                         color = MaterialTheme.colors.secondary,
                     )
                 }
@@ -125,7 +125,7 @@ fun ReviewRadioButtonGroup(viewModel: CodeReviewViewModel, focusManager: FocusMa
                     )
                     Text(
                         text = text.value,
-                        style = MaterialTheme.typography.subtitle2.merge(),
+                        style = MaterialTheme.typography.subtitle1.merge(),
                         modifier = Modifier.padding(start = 12.dp)
                     )
                 }

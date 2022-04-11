@@ -39,14 +39,14 @@ fun PullRequestDetailCommitsScreen(
                         Text(
                             text = commit.commit.message,
                             color = MaterialTheme.colors.primary,
-                            style = MaterialTheme.typography.h1,
+                            style = MaterialTheme.typography.h5,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
                         Text(
                             text = commit.commit.author.name,
                             color = MaterialTheme.colors.primaryVariant,
-                            style = MaterialTheme.typography.subtitle2
+                            style = MaterialTheme.typography.subtitle1
                         )
                     }
                     Spacer(modifier = Modifier.weight(1f))
@@ -55,7 +55,7 @@ fun PullRequestDetailCommitsScreen(
                             commit.commit.author.date,
                         ),
                         color = MaterialTheme.colors.primaryVariant,
-                        style = MaterialTheme.typography.subtitle2
+                        style = MaterialTheme.typography.subtitle1
                     )
                 }
             }

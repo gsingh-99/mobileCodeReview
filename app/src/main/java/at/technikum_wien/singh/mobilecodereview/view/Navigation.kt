@@ -49,7 +49,7 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         Text(
                             text = viewModel.vscPullRequestDetail.value.head.repo.full_name ?: "",
                             color = MaterialTheme.colors.secondary,
-                            style = MaterialTheme.typography.subtitle1
+                            style = MaterialTheme.typography.subtitle2
                         )
                 }
             }
@@ -176,7 +176,7 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = "Prototype by Gurparkash Singh 2022",
-                    style = MaterialTheme.typography.subtitle1
+                    style = MaterialTheme.typography.subtitle2
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }

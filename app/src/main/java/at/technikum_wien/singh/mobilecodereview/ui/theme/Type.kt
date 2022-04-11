@@ -21,14 +21,14 @@ val Typography = Typography(
     subtitle1 = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 14.sp
+        fontSize = 18.sp
     ),
     subtitle2 = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
-        fontSize = 18.sp
+        fontSize = 14.sp
     ),
-    h1 = TextStyle(
+    h5 = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp

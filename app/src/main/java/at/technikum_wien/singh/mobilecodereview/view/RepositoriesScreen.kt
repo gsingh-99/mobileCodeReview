@@ -71,12 +71,12 @@ fun RepositoryItemRow(
                     Text(
                         text = "" + repositoryItemItem.owner.login,
                         color = MaterialTheme.colors.primaryVariant,
-                        style = MaterialTheme.typography.subtitle1
+                        style = MaterialTheme.typography.subtitle2
                     )
                     Text(
                         text = repositoryItemItem.name ?: "",
                         color = MaterialTheme.colors.primary,
-                        style = MaterialTheme.typography.h1
+                        style = MaterialTheme.typography.h5
                     )
                 }
             }
