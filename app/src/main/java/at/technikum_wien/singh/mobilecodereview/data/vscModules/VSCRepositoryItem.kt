@@ -1,10 +1,8 @@
 package at.technikum_wien.singh.mobilecodereview.data.vscModules
 
 import android.util.Log
-import at.technikum_wien.singh.mobilecodereview.data.enum.VSCType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

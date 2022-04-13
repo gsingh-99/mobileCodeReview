@@ -8,11 +8,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItemRepository
+import at.technikum_wien.singh.mobilecodereview.data.enum.Host
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.*
 import at.technikum_wien.singh.mobilecodereview.ui.theme.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.awaitResponse
 import java.util.*
 
 class CodeReviewViewModel(
@@ -114,7 +114,8 @@ class CodeReviewViewModel(
         tfAddRepositoryUrl = urlParser(tfAddRepositoryUrl)
         val repositoryItem = RepositoryItem(
             tfAddRepositoryUrl,
-            tfAddRepositoryToken
+            tfAddRepositoryToken,
+            Host.GITHUB
         )
         tfAddRepositoryUrl = ""
         tfAddRepositoryToken = ""
