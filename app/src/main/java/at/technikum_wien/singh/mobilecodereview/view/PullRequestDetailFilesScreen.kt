@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -55,8 +56,9 @@ fun PullRequestDetailFilesScreen(
                                     overflow = TextOverflow.Ellipsis
                                 )
                             }
-
-                            //  Checkbox(checked = false, onCheckedChange = {})
+                            Spacer(modifier = Modifier.weight(1f))
+                              Checkbox(checked = false, onCheckedChange = {},  colors = CheckboxDefaults.colors(
+                                  Color.Black, Color.Black),)
                         }
                     }
                 }

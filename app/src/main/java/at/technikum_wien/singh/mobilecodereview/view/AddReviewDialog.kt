@@ -58,7 +58,8 @@ fun AddReviewDialog(viewModel: CodeReviewViewModel, repositoryItem: RepositoryIt
                         )
                     },
                     placeholder = { Text(text = "Review...", color = Color.LightGray) },
-                    maxLines = 10,
+                    maxLines = 15,
+                    textStyle = MaterialTheme.typography.subtitle2,
                     modifier = Modifier.heightIn(
                         maxScreenHeightTextArea.dp,
                         maxScreenHeightTextArea.dp
