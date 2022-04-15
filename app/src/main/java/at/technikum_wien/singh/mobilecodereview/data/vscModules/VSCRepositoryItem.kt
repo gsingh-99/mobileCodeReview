@@ -73,6 +73,10 @@ data class VSCWriteReview(
     val event: String
 )
 
+data class VSCWriteComment(
+    val body: String
+)
+
 data class VSCBase(
     val ref: String
 )
@@ -198,6 +202,13 @@ interface APIService {
         @Header("Authorization") authorization: String,
         @Body body: VSCWriteReview
     ): Response<VSCReview>
+
+    @POST
+    suspend fun createPullRequestComment(
+        @Url url: String,
+        @Header("Authorization") authorization: String,
+        @Body body: VSCWriteComment
+    ): Response<VSCWriteComment>
 
     companion object {
         var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()

@@ -75,6 +75,8 @@ class CodeReviewViewModel(
         get() = _pullRequestDetailFiles
 
     //COMMENTS
+    val openAddNewCommentsDialog = mutableStateOf(false)
+    var tfAddCommentText: String by mutableStateOf("")
     private val _pullRequestDetailComments = mutableStateListOf<VSCComment>()
     val vscPullRequestDetailComments: List<VSCComment>
         get() = _pullRequestDetailComments
@@ -290,6 +292,26 @@ class CodeReviewViewModel(
                 }
                 tfAddReviewText = ""
                 reviewSelectedType.value = "APPROVE"
+            } catch (e: Exception) {
+                errorMessage = e.message.toString()
+            }
+        }
+    }
+
+    fun createPullRequestComment(url: String, token: String) {
+        viewModelScope.launch {
+            val apiService = APIService.getInstance()
+            try {
+                val comment = VSCWriteComment(tfAddCommentText)
+                val code =
+                    apiService.createPullRequestComment(url, " token $token", comment)
+                        .code()
+                if (code == 201) {
+                    getPullRequestComments(
+                        "${_pullRequestDetail.value._links.issue.href}/comments", token
+                    )
+                }
+                tfAddCommentText = ""
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
             }

@@ -145,8 +145,20 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     )
 
                 }
-                composable(route = Screen.PullRequestDetailCommentsScreen.route) {
-                    PullRequestDetailCommentsScreen(viewModel = viewModel)
+                composable(
+                    route = Screen.PullRequestDetailCommentsScreen.route + "/{repositoryIndex}",
+                    arguments = listOf(
+                        navArgument(name = "repositoryIndex") {
+                            type = NavType.LongType
+                        })
+                ) {
+                    val index = it.arguments?.getLong("repositoryIndex")
+                    val repoItem: RepositoryItem? =
+                        viewModel.repositoryItems.value?.find { item -> item.id == index }
+                    PullRequestDetailCommentsScreen(
+                        viewModel = viewModel,
+                        repositoryItem = repoItem
+                    )
                 }
                 composable(
                     route = Screen.PullRequestDetailReviewsScreen.route + "/{repositoryIndex}",

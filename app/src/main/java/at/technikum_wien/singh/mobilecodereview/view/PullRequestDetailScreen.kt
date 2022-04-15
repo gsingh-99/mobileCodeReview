@@ -102,7 +102,7 @@ fun PullRequestDetailScreen(
             }
             Spacer(modifier = Modifier.height(24.dp))
             Box(modifier = Modifier.clickable {
-                navController.navigate(route = Screen.PullRequestDetailCommentsScreen.route)
+                navController.navigate(route = Screen.PullRequestDetailCommentsScreen.route + "/${repositoryItem?.id}")
             }) {
                 Column {
                     Text(
