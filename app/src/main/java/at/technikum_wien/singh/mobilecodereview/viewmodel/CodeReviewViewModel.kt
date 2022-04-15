@@ -94,6 +94,8 @@ class CodeReviewViewModel(
 
     var errorMessage: String by mutableStateOf("")
 
+    val fileSearcherProgress = mutableStateOf(false)
+
     // Add new Repository
     val openAddNewRepositoryDialog = mutableStateOf(false)
     var tfAddRepositoryUrl: String by mutableStateOf("")
@@ -421,7 +423,20 @@ class CodeReviewViewModel(
             }
         }
     }
+
+    fun findFileBlocker(sha: String?): VSCFile {
+        var foundFile: VSCFile = VSCFile("", "", 0, 0, 0, "", "")
+        for (file: VSCFile in vscPullRequestDetailFiles) {
+            if (file.sha == sha) {
+                foundFile = file
+                break
+            }
+        }
+        fileSearcherProgress.value = true
+        return foundFile
+    }
 }
+
 
 class CodeReviewViewModelFactory(
     private val application: Application,

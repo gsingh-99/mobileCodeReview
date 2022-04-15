@@ -129,16 +129,16 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     )
                 }
                 composable(
-                    route = Screen.PullRequestDetailFilesDetailScreen.route + "/{fileSha}",
+                    route = Screen.PullRequestDetailFilesDetailScreen.route + "/{fileName}",
                     arguments = listOf(
-                        navArgument(name = "fileSha") {
+                        navArgument(name = "fileName") {
                             type = NavType.StringType
                         })
                 ) {
-                    val index = it.arguments?.getString("fileSha")
+                    val index = it.arguments?.getString("fileName")
                     val vscFile =
-                        viewModel.vscPullRequestDetailFiles.find { item -> item.sha == index }
-                    PullRequestDetailFilesDetailScreen(
+                        viewModel.vscPullRequestDetailFiles.find { item -> item.filename == index }
+                    PullRequestDetailFilesScreenPager(
                         // navController = navController,
                         viewModel = viewModel,
                         file = vscFile
