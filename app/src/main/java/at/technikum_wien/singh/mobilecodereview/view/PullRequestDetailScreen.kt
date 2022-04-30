@@ -83,11 +83,14 @@ fun PullRequestDetailScreen(
                     )
             }
             Spacer(modifier = Modifier.height(24.dp))
-            Text(
-                text = "Static code analysis",
-                color = MaterialTheme.colors.primary,
-                style = MaterialTheme.typography.h5
-            )
+            Box(modifier = Modifier.clickable
+            { navController.navigate(Screen.PullRequestDetailStaticAnalyseScreen.route) }) {
+                Text(
+                    text = "Static code analysis",
+                    color = MaterialTheme.colors.primary,
+                    style = MaterialTheme.typography.h5
+                )
+            }
             Spacer(modifier = Modifier.height(24.dp))
             Box(modifier = Modifier
                 .fillMaxWidth()
