@@ -96,6 +96,9 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                         )
                     }
                 }
+                composable(route = Screen.PullRequestDetailStaticAnalyseScreen.route) {
+                    PullRequestDetailStaticAnalyseScreen(navController = navController, viewModel = viewModel)
+                }
                 composable(
                     route = Screen.PullRequestDetailCommitsScreen.route + "/{repositoryIndex}",
                     arguments = listOf(

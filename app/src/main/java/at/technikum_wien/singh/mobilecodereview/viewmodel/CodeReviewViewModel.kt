@@ -131,7 +131,11 @@ class CodeReviewViewModel(
         viewModelScope.launch {
             repository.insert(repositoryItem)
         }
+        getPullRequestList()
+        getGithubList()
+        refreshApiCalls.value = false
         openAddNewRepositoryDialog.value = false
+
     }
 
     init {
