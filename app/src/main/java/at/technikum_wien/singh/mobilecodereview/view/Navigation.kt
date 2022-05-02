@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -52,6 +53,16 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                             style = MaterialTheme.typography.subtitle2
                         )
                 }
+                Spacer(modifier = Modifier.weight(1f))
+                if (navBackStackEntry?.destination?.route.equals("main_screen")) {
+                    IconButton(onClick = { navController.navigate(Screen.SettingsScreen.route) }) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            tint = MaterialTheme.colors.background,
+                            contentDescription = "Settings"
+                        )
+                    }
+                }
             }
         },
         content = {
@@ -97,7 +108,13 @@ fun Navigation(viewModel: CodeReviewViewModel) {
                     }
                 }
                 composable(route = Screen.PullRequestDetailStaticAnalyseScreen.route) {
-                    PullRequestDetailStaticAnalyseScreen(navController = navController, viewModel = viewModel)
+                    PullRequestDetailStaticAnalyseScreen(
+                        navController = navController,
+                        viewModel = viewModel
+                    )
+                }
+                composable(route = Screen.SettingsScreen.route) {
+                    SettingsScreen(navController = navController, viewModel = viewModel)
                 }
                 composable(
                     route = Screen.PullRequestDetailCommitsScreen.route + "/{repositoryIndex}",

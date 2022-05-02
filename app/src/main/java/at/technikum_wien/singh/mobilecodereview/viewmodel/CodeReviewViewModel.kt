@@ -107,7 +107,10 @@ class CodeReviewViewModel(
     val openAddNewRepositoryDialog = mutableStateOf(false)
     var tfAddRepositoryUrl: String by mutableStateOf("")
     var tfAddRepositoryToken: String by mutableStateOf("")
-
+    // Settings
+    var tfSonarQubeUrl: String by mutableStateOf("https://localhost:9001")
+    var tfGitHubUrl: String by mutableStateOf("https://api.github")
+    var tfGitLabUrl: String by mutableStateOf("https://api.gitlab")
     private val TAG = "ViewModel"
 
     fun urlParser(url: String): String {
