@@ -1,13 +1,18 @@
 package at.technikum_wien.singh.mobilecodereview.data.vscModules
 
 import android.util.Log
+import at.technikum_wien.singh.mobilecodereview.data.converter.GetGitLabPullRequestDeserialier
+import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Converter
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import java.lang.reflect.Type
 import java.util.*
+
 
 data class VSCRepositoryItem(
     val id: Int?,
@@ -126,7 +131,7 @@ interface APIService {
     )
     @GET
     suspend fun getUser(
-        @Url url: String = "https://api.github.com/user",
+        @Url url: String,
         @Header("Authorization") authorization: String
     ): VSCUser
 
@@ -213,7 +218,7 @@ interface APIService {
     companion object {
         var logging: HttpLoggingInterceptor = HttpLoggingInterceptor()
         var apiService: APIService? = null
-        fun getInstance(): APIService {
+        fun getGithubInstance(): APIService {
             logging.setLevel(HttpLoggingInterceptor.Level.BODY)
             var httpClient: OkHttpClient =
                 OkHttpClient().newBuilder().addInterceptor(logging).build()
@@ -222,6 +227,24 @@ interface APIService {
                 apiService = Retrofit.Builder()
                     .baseUrl("https://api.github.com")
                     .addConverterFactory(GsonConverterFactory.create())
+                    .client(httpClient)
+                    .build().create(APIService::class.java)
+            }
+            return apiService!!
+        }
+
+        fun getGitLabInstance(): APIService {
+            val gson = GsonBuilder().registerTypeAdapter(
+                VSCPullrequest::class.java,
+                GetGitLabPullRequestDeserialier()
+            ).create()
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY)
+            var httpClient: OkHttpClient =
+                OkHttpClient().newBuilder().addInterceptor(logging).build()
+            if (apiService == null) {
+                apiService = Retrofit.Builder()
+                    .baseUrl("https://gitlab.com")
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .client(httpClient)
                     .build().create(APIService::class.java)
             }

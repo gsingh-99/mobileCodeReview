@@ -1,6 +1,7 @@
 package at.technikum_wien.singh.mobilecodereview.viewmodel
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -20,6 +21,10 @@ class CodeReviewViewModel(
     private val repository: RepositoryItemRepository
 ) :
     ViewModel() {
+    private val gitHubApiService = APIService.getGithubInstance()
+
+    private val gitLabApiService = APIService.getGitLabInstance()
+
     val isRefreshing = MutableStateFlow(false)
     val title = mutableStateOf("")
     val openGenericDialog = mutableStateOf(false)
@@ -131,18 +136,18 @@ class CodeReviewViewModel(
 
     init {
         viewModelScope.launch {
-            repositoryItems.value
+            var item = gitLabApiService.getPullRequest("https://gitlab.com/api/v4/projects/35444404/merge_requests/1"," Bearer glpat-8gzjyJsV6ob5pyp9yVve")
+            Log.d("test",item.toString())
         }
     }
 
     fun getGithubList() {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             _repositoryList.clear()
             repositoryItems.value?.forEach {
                 try {
                     _repositoryList.add(
-                        apiService.getRepository(
+                        gitHubApiService.getRepository(
                             it.url,
                             " token " + it.token
                         )
@@ -157,13 +162,12 @@ class CodeReviewViewModel(
 
     fun getPullRequestList() {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
 
             _pullRequestList.clear()
             repositoryItems.value?.forEach {
 
                 try {
-                    val pullRequestList = apiService.getPullRequests(
+                    val pullRequestList = gitHubApiService.getPullRequests(
                         it.url + "/pulls",
                         " token " + it.token
                     )
@@ -183,10 +187,9 @@ class CodeReviewViewModel(
 
     fun getPullRequest(url: String, token: String) {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             try {
                 _pullRequestDetail.value =
-                    apiService.getPullRequest(
+                    gitHubApiService.getPullRequest(
                         url,
                         " token $token"
                     )
@@ -203,11 +206,10 @@ class CodeReviewViewModel(
 
     private fun getPullRequestComments(url: String, token: String) {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             try {
                 _pullRequestDetailComments.clear()
                 _pullRequestDetailComments.addAll(
-                    apiService.getPullRequestComments(url, " token $token")
+                    gitHubApiService.getPullRequestComments(url, " token $token")
                 )
             } catch (e: Exception) {
                 errorMessage = e.message.toString()
@@ -217,11 +219,10 @@ class CodeReviewViewModel(
 
     fun getPullRequestCommits(url: String, token: String) {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             try {
                 _pullRequestDetailCommits.clear()
                 _pullRequestDetailCommits.addAll(
-                    apiService.getPullRequestCommits(
+                    gitHubApiService.getPullRequestCommits(
                         url,
                         " token $token"
                     )
@@ -234,11 +235,10 @@ class CodeReviewViewModel(
 
     fun getPullRequestFiles(url: String, token: String) {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             try {
                 _pullRequestDetailFiles.clear()
                 _pullRequestDetailFiles.addAll(
-                    apiService.getPullRequestFiles(
+                    gitHubApiService.getPullRequestFiles(
                         url,
                         " token $token"
                     )
@@ -251,11 +251,10 @@ class CodeReviewViewModel(
 
     fun getPullRequestReviews(url: String, token: String) {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             try {
                 _pullRequestDetailReviews.clear()
                 _pullRequestDetailReviews.addAll(
-                    apiService.getPullRequestReviews(url, " token $token")
+                    gitHubApiService.getPullRequestReviews(url, " token $token")
                 )
                 _pullRequestDetailReviews.forEach {
                     if (it.state == "PENDING")
@@ -267,21 +266,21 @@ class CodeReviewViewModel(
         }
     }
 
+
     fun createPullRequestReview(url: String, token: String) {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             try {
                 val review = VSCWriteReview(tfAddReviewText, reviewSelectedType.value)
                 val code =
-                    apiService.createPullRequestReview(url, " token $token", review)
+                    gitHubApiService.createPullRequestReview(url, " token $token", review)
                         .code()
                 if (code == 422) {
                     // if the user has a pending request search the id and overwrite it with the given body and event type
-                    val user = apiService.getUser("https://api.github.com/user", " token $token")
-                    val reviews = apiService.getPullRequestReviews(url, " token $token")
+                    val user = gitHubApiService.getUser("https://api.github.com/user", " token $token")
+                    val reviews = gitHubApiService.getPullRequestReviews(url, " token $token")
                     for (reviewItem in reviews) {
                         if (reviewItem.state == "PENDING" && reviewItem.user.id == user.id) {
-                            apiService.createPullRequestReview(
+                            gitHubApiService.createPullRequestReview(
                                 url + "/${reviewItem.id}/events",
                                 " token $token",
                                 review
@@ -300,11 +299,10 @@ class CodeReviewViewModel(
 
     fun createPullRequestComment(url: String, token: String) {
         viewModelScope.launch {
-            val apiService = APIService.getInstance()
             try {
                 val comment = VSCWriteComment(tfAddCommentText)
                 val code =
-                    apiService.createPullRequestComment(url, " token $token", comment)
+                    gitHubApiService.createPullRequestComment(url, " token $token", comment)
                         .code()
                 if (code == 201) {
                     getPullRequestComments(
@@ -354,7 +352,6 @@ class CodeReviewViewModel(
             textList.forEach {
                 if (it.startsWith("@@")) {
                     val minusText = it.removeRange(it.indexOf(" +"), it.length)
-
                     minusIndex =
                         if (minusText.substring(minusText.indexOf("-") + 1).contains(",")) {
                             minusText.substring(
