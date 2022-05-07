@@ -21,11 +21,11 @@ fun SettingsScreen(
     viewModel: CodeReviewViewModel
 ) {
     viewModel.title.value = "Einstellungen"
-    Column(Modifier.padding(12.dp,0.dp)) {
+    Column(Modifier.padding(12.dp, 0.dp)) {
         TextField(
             value = viewModel.tfSonarQubeUrl,
-            onValueChange = { viewModel.tfSonarQubeUrl = it },
-            textStyle=MaterialTheme.typography.subtitle1,
+            onValueChange = { viewModel.updateSonarQubeAddress(it) },
+            textStyle = MaterialTheme.typography.subtitle1,
             label = {
                 Text(
                     text = "SonarQube Server Address",
@@ -38,8 +38,8 @@ fun SettingsScreen(
         )
         TextField(
             value = viewModel.tfGitHubUrl,
-            onValueChange = { viewModel.tfGitHubUrl = it },
-            textStyle=MaterialTheme.typography.subtitle1,
+            onValueChange = { viewModel.updateGithubApiUrl(it) },
+            textStyle = MaterialTheme.typography.subtitle1,
             label = {
                 Text(
                     text = "GitHub API Url",
@@ -52,8 +52,8 @@ fun SettingsScreen(
         )
         TextField(
             value = viewModel.tfGitLabUrl,
-            onValueChange = { viewModel.tfGitLabUrl = it },
-            textStyle=MaterialTheme.typography.subtitle1,
+            onValueChange = { viewModel.updateGitlabApiUrl(it) },
+            textStyle = MaterialTheme.typography.subtitle1,
             label = {
                 Text(
                     text = "GitLab API Url",

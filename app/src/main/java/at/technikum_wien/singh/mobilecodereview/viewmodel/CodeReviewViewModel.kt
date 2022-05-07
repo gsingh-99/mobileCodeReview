@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItem
 import at.technikum_wien.singh.mobilecodereview.data.RepositoryItemRepository
+import at.technikum_wien.singh.mobilecodereview.data.UserPreferencesRepository
 import at.technikum_wien.singh.mobilecodereview.data.enum.Host
 import at.technikum_wien.singh.mobilecodereview.data.vscModules.*
 import at.technikum_wien.singh.mobilecodereview.ui.theme.*
@@ -18,7 +19,8 @@ import java.util.*
 
 class CodeReviewViewModel(
     private val application: Application,
-    private val repository: RepositoryItemRepository
+    private val repository: RepositoryItemRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) :
     ViewModel() {
     private val gitHubApiService = APIService.getGithubInstance()
@@ -107,6 +109,7 @@ class CodeReviewViewModel(
     val openAddNewRepositoryDialog = mutableStateOf(false)
     var tfAddRepositoryUrl: String by mutableStateOf("")
     var tfAddRepositoryToken: String by mutableStateOf("")
+
     // Settings
     var tfSonarQubeUrl: String by mutableStateOf("https://localhost:9001")
     var tfGitHubUrl: String by mutableStateOf("https://api.github")
@@ -143,9 +146,25 @@ class CodeReviewViewModel(
 
     init {
         viewModelScope.launch {
-            var item = gitLabApiService.getPullRequest("https://gitlab.com/api/v4/projects/35444404/merge_requests/1"," Bearer glpat-8gzjyJsV6ob5pyp9yVve")
-            Log.d("test",item.toString())
+            // var item = gitLabApiService.getPullRequest("https://gitlab.com/api/v4/projects/35444404/merge_requests/1"," Bearer glpat-8gzjyJsV6ob5pyp9yVve")
+            userPreferencesRepository.userPreferencesFlow.collect {
+                tfSonarQubeUrl = it.sonarQubeAddress
+                tfGitHubUrl = it.githubApiUrl
+                tfGitLabUrl = it.gitlabApiUrl
+            }
         }
+    }
+
+    fun updateSonarQubeAddress(newSonarQubeAddress: String) {
+        viewModelScope.launch { userPreferencesRepository.updateSonarQubeAddress(newSonarQubeAddress = newSonarQubeAddress); }
+    }
+
+    fun updateGithubApiUrl(newGithubApiUrl: String) {
+        viewModelScope.launch { userPreferencesRepository.updateGithubApiUrl(newGithubApiUrl = newGithubApiUrl); }
+    }
+
+    fun updateGitlabApiUrl(newGitlabApiUrl: String) {
+        viewModelScope.launch { userPreferencesRepository.updateGitlabApiUrl(newGitlabApiUrl = newGitlabApiUrl); }
     }
 
     fun getGithubList() {
@@ -283,7 +302,8 @@ class CodeReviewViewModel(
                         .code()
                 if (code == 422) {
                     // if the user has a pending request search the id and overwrite it with the given body and event type
-                    val user = gitHubApiService.getUser("https://api.github.com/user", " token $token")
+                    val user =
+                        gitHubApiService.getUser("https://api.github.com/user", " token $token")
                     val reviews = gitHubApiService.getPullRequestReviews(url, " token $token")
                     for (reviewItem in reviews) {
                         if (reviewItem.state == "PENDING" && reviewItem.user.id == user.id) {
@@ -466,12 +486,17 @@ class CodeReviewViewModel(
 
 class CodeReviewViewModelFactory(
     private val application: Application,
-    private val repository: RepositoryItemRepository
+    private val repository: RepositoryItemRepository,
+    private val userPreferencesRepository: UserPreferencesRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CodeReviewViewModel::class.java)) {
             @Suppress("UNCHECKED_CAST")
-            return CodeReviewViewModel(application = application, repository = repository) as T
+            return CodeReviewViewModel(
+                application = application,
+                repository = repository,
+                userPreferencesRepository = userPreferencesRepository
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
