@@ -20,7 +20,7 @@ fun SettingsScreen(
     navController: NavController,
     viewModel: CodeReviewViewModel
 ) {
-    viewModel.title.value = "Einstellungen"
+    viewModel.title.value = "Settings"
     Column(Modifier.padding(12.dp, 0.dp)) {
         TextField(
             value = viewModel.tfSonarQubeUrl,

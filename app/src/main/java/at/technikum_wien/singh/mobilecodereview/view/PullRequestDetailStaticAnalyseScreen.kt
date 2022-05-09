@@ -64,10 +64,10 @@ fun PullRequestDetailStaticAnalyseScreen(
                     "alert.js"
                 )
                 IssueBox(
-                    "Code Smell",
-                    "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
-                    "9-9",
-                    "alert.js"
+                    "Bug",
+                    "Return statement will always return 'false'.",
+                    "23-23",
+                    "navigation.js"
                 )
                 IssueBox(
                     "Code Smell",
@@ -80,6 +80,12 @@ fun PullRequestDetailStaticAnalyseScreen(
                     "Add a 'protected' constructor or the 'static' keyword to the class declaration.",
                     "9-9",
                     "alert.js"
+                )
+                IssueBox(
+                    "Bug",
+                    "Return statement will always return 'false'..",
+                    "23-23",
+                    "navigation.js"
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
